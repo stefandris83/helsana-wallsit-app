@@ -142,8 +142,16 @@ Deshalb ist dieser Schluessel kein Secret und darf im Repository stehen (B.12 bl
 Das Leserecht haengt bewusst an der E-Mail-Adresse des angemeldeten Kontos, nicht daran, dass
 ueberhaupt jemand angemeldet ist: selbst wenn im Projekt die Registrierung offen stehen sollte,
 kann ein fremdes Konto die Berichte nicht lesen. Berechtigte Adressen stehen in
-`public.report_readers`; die Tabelle hat bewusst keine Leseregel und ist damit nur serverseitig
-einsehbar.
+`public.report_readers`; die Tabelle hat bewusst keine Leseregel und ist damit fuer Clients nicht
+einsehbar. Damit die Leseregel sie trotzdem auswerten kann, laeuft die Pruefung in der Funktion
+`public.is_report_reader()` mit definierenden Rechten — sie gibt nur wahr oder falsch zurueck und
+legt die Liste nicht offen. Gegenprobe am 03.08.2026 direkt in der Datenbank:
+
+| Kontext | Sichtbare Berichte | Sichtbare Erlaubnisliste |
+|---|---|---|
+| angemeldet als berechtigte Adresse | alle | — |
+| angemeldet als fremde Adresse | 0 | 0 |
+| nur mit dem ausgelieferten Schluessel | 0 (Lesen 400) | 0 |
 
 ### Anmeldung am Dashboard
 

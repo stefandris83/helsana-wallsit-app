@@ -71,7 +71,7 @@ Zuerich (`eu-central-2`).
 |---|---|
 | Transport | HTTPS gegen die Storage-Schnittstelle, kein SDK, kein zusaetzliches Paket |
 | Berechtigung Schreiben | `berichte_anon_insert`: `insert` fuer `anon` im Ordner `berichte` |
-| Berechtigung Lesen | `berichte_reader_select`: `select` fuer angemeldete Konten, deren Adresse in `public.report_readers` steht |
+| Berechtigung Lesen | `berichte_reader_select`: `select` fuer angemeldete Konten, deren Adresse in `public.report_readers` steht. Die Pruefung laeuft ueber `public.is_report_reader()` mit definierenden Rechten, damit die Erlaubnisliste selbst fuer Clients unlesbar bleibt. |
 | Lesen und Loeschen mit dem ausgelieferten Schluessel | gesperrt, geprueft am 03.08.2026 |
 | Anmeldung des Dashboards | E-Mail und Passwort gegen `/auth/v1/token`; Token nur im Arbeitsspeicher, kein Refresh, keine Persistenz |
 | Dateiname | `<Pilotnummer>-<Zeitstempel>.json`, kein Ueberschreiben moeglich |
