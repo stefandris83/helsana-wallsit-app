@@ -44,6 +44,43 @@ Im Repository liegen keine Secrets.
 | `VITE_FEATURE_SKIP_REST` | Feature-Flag «Pause ueberspringen» — **freigabepflichtig** | `false` |
 | `VITE_MIN_GROUP_SIZE` | Mindestgruppengroesse im Dashboard | `5` |
 
+`BASE_PATH` ist keine Vite-Variable, sondern eine Build-Variable: sie setzt den Basis-Pfad der
+Auslieferung (`vite.config.ts`). Lokal `/`, auf GitHub Pages `/<repository>/`.
+
+## Auslieferung auf GitHub Pages
+
+Repository: <https://github.com/stefandris83/helsana-wallsit-app>
+
+| Zweck | Adresse |
+|---|---|
+| Teilnehmerinnen und Teilnehmer | <https://stefandris83.github.io/helsana-wallsit-app/> |
+| Pilot-Dashboard | <https://stefandris83.github.io/helsana-wallsit-app/admin> |
+
+Jeder Push auf `main` startet `.github/workflows/deploy.yml`: Lint, Typecheck, Tests, Build,
+Deployment. Schlaegt einer der Schritte fehl, wird nichts veroeffentlicht. Der Workflow setzt
+`BASE_PATH` aus dem Repository-Namen; ein Fork oder eine Umbenennung funktioniert ohne Anpassung.
+
+Die App verwendet echte Pfade (`/heute`, `/admin`) statt Hash-Routing. GitHub Pages kennt diese
+Pfade nicht als Dateien, deshalb erzeugt der Build zusaetzlich eine `404.html` als Kopie der
+`index.html`. Ein Direktaufruf oder ein Reload einer Unterseite laedt damit dieselbe Anwendung,
+die den Pfad selbst aufloest. `.nojekyll` verhindert die Jekyll-Verarbeitung.
+
+**Grenzen dieser Auslieferung.** Sie ist fuer Demonstration und internes Testen gedacht, nicht
+fuer einen Pilot mit echten Teilnehmerdaten:
+
+- Der Zugangscode fuer `/admin` wird in das ausgelieferte JavaScript kompiliert und ist damit
+  fuer jede Person lesbar, die die Seite aufruft. Der Deploy verwendet bewusst den erkennbaren
+  Demo-Wert `pilot-admin-demo`. Ein Repository-Secret `VITE_ADMIN_CODE` uebersteuert ihn, aendert
+  aber nichts an der Auslesbarkeit. Das bleibt der in CLAUDE.md B.9 beschriebene Platzhalter und
+  ist kein produktiver Authentisierungsmechanismus.
+- Die App ist local-first: Daten liegen im Browser des jeweiligen Geraets. Jede Besucherin und
+  jeder Besucher startet mit leerem Zustand, und das Dashboard zeigt nur, was auf demselben
+  Geraet entstanden ist. Fuer eine Vorfuehrung im Dashboard den Schalter «Demodaten» aktivieren.
+- Der Einladungscode schuetzt nicht vor Zugriff, er ordnet nur eine Pilot-ID zu. Die Seite ist
+  oeffentlich erreichbar; wer die Adresse kennt, kann die App verwenden.
+- Das Repository ist oeffentlich und enthaelt neben dem Code auch `spec.md`, `design-system.md`
+  und `CLAUDE.md` sowie das Helsana-Logo (Herkunft siehe «Design System «Unify»»).
+
 ## Projektstruktur
 
 ```

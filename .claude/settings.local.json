@@ -52,7 +52,13 @@
       "Bash(BASE_PATH=/helsana-wallsit-app/ npm run build)",
       "Bash(git init *)",
       "Bash(git config *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(gh repo *)",
+      "Bash(gh api *)",
+      "Bash(gh run *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d['status'], d['html_url']\\)\")",
+      "Bash(git push *)"
     ]
   }
 }
