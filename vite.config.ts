@@ -45,5 +45,15 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
     restoreMocks: true,
+    /**
+     * Feste Testkonfiguration der Berichtsablage. Ohne sie haetten die Tests
+     * je nach lokal vorhandener `.env.local` ein anderes Ergebnis; der
+     * Endpunkt ist erfunden und wird in den Tests ohnehin abgefangen.
+     */
+    env: {
+      VITE_REPORT_UPLOAD_URL: 'https://ablage.example.invalid',
+      VITE_REPORT_UPLOAD_KEY: 'test-schluessel',
+      VITE_REPORT_UPLOAD_BUCKET: 'berichte',
+    },
   },
 });

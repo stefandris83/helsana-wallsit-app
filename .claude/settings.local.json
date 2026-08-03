@@ -76,7 +76,8 @@
       "Bash(curl -s https://stefandris83.github.io/helsana-wallsit-app/assets/index-D7fuOiHG.js)",
       "mcp__62743d8a-a777-488d-9ddd-075983454cd7__get_advisors",
       "Bash(curl -s -o /dev/null -w '%{http_code}\\\\n' -X POST https://dooujsoadubsikihrvqw.supabase.co/auth/v1/token?grant_type=password -H 'apikey: sb_publishable_t8isCuQdd7iF_SVLVuw06Q_c1dixx7c' -H 'content-type: application/json' -d '{\"email\":\"niemand@example.invalid\",\"password\":\"falsch\"}')",
-      "Bash(curl -s -X POST https://dooujsoadubsikihrvqw.supabase.co/storage/v1/object/list/berichte -H 'apikey: sb_publishable_t8isCuQdd7iF_SVLVuw06Q_c1dixx7c' -H 'authorization: Bearer sb_publishable_t8isCuQdd7iF_SVLVuw06Q_c1dixx7c' -H 'content-type: application/json' -d '{\"prefix\":\"\",\"limit\":100}')"
+      "Bash(curl -s -X POST https://dooujsoadubsikihrvqw.supabase.co/storage/v1/object/list/berichte -H 'apikey: sb_publishable_t8isCuQdd7iF_SVLVuw06Q_c1dixx7c' -H 'authorization: Bearer sb_publishable_t8isCuQdd7iF_SVLVuw06Q_c1dixx7c' -H 'content-type: application/json' -d '{\"prefix\":\"\",\"limit\":100}')",
+      "Bash(git ls-remote *)"
     ]
   }
 }
