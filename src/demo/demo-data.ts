@@ -491,6 +491,27 @@ const recordSpecs: DemoRecordSpec[] = [
     remindersEnabled: true,
     safetyConfirmed: true,
   },
+  {
+    // Frueher Abbruch: nach der ersten Einheit nichts mehr. Zeigt im Dashboard
+    // den Unterschied zwischen «Programm gestartet» und «aktiv».
+    pilotId: 'P-108',
+    startOffsetDays: -56,
+    trainingDays: ['tue', 'thu', 'sun'],
+    sessionCount: 1,
+    variantBias: 'light',
+    questionnaire: {
+      ...demoQuestionnaire,
+      activityLevel: 'rarely',
+      wallsitExperience: 'never',
+      barriers: ['motivation', 'how-to-start'],
+      support: 'reminders',
+      confidence: 3,
+    },
+    bpEntryCount: 0,
+    learningCards: [],
+    remindersEnabled: false,
+    safetyConfirmed: true,
+  },
 ];
 
 function buildRecord(spec: DemoRecordSpec): PilotParticipantRecord {
