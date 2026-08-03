@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { aggregate, defaultFilters } from './aggregation';
 import { createBpEntry } from './bp-repository';
 import { appendEvent } from './event-log';
@@ -12,6 +12,24 @@ import { toIsoDate } from '../domain/dates';
 import type { TrainingPlan, TrainingSession } from '../domain/types';
 
 /** B.11.9: Anonymisierung von Dashboard und Standardexport (§26). */
+
+/**
+ * Feste Uhrzeit fuer alle Tests dieser Datei. Der Export enthaelt Zeitstempel,
+ * und die Pruefung «kein Blutdruckwert im Export» sucht nach kurzen Zahlen:
+ * eine echte Uhrzeit kann eine solche Zahl zufaellig enthalten (etwa die
+ * Millisekunden `.193`) und den Test scheinbar fehlschlagen lassen. Der feste
+ * Zeitpunkt enthaelt keine der geprueften Zahlenfolgen.
+ */
+const FIXED_NOW = new Date('2026-08-03T08:00:00.000Z');
+
+beforeEach(() => {
+  vi.useFakeTimers();
+  vi.setSystemTime(FIXED_NOW);
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 const CONTACT = 'kontakt-platzhalter@example.invalid';
 const NOTE = 'Freitextnotiz aus dem Tagebuch';
