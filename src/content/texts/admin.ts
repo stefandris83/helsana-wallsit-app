@@ -30,7 +30,7 @@ export const adminContent = defineContent({
   },
   'admin.dataSourceNote': {
     owner: 'engineering',
-    text: 'Grundlage ist der lokale Datenbestand dieses Geräts. Im Betrieb tritt an diese Stelle die serverseitige Pilotdatenbank.',
+    text: 'Grundlage sind der lokale Datenbestand dieses Geräts und die eingelesenen Ergebnisberichte. Im Betrieb tritt an diese Stelle die serverseitige Pilotdatenbank.',
   },
 
   'admin.section.overview': { owner: 'product', text: 'Übersicht' },
@@ -87,6 +87,25 @@ export const adminContent = defineContent({
   'admin.filter.from': { owner: 'product', text: 'Von' },
   'admin.filter.to': { owner: 'product', text: 'Bis' },
   'admin.filter.reset': { owner: 'product', text: 'Filter zurücksetzen' },
+
+  'admin.import.title': { owner: 'privacy', text: 'Geteilte Ergebnisberichte einlesen' },
+  'admin.import.text': {
+    owner: 'privacy',
+    text: 'Berichte, die Teilnehmende freiwillig geteilt haben, als JSON-Dateien auswählen. Mehrfachauswahl ist möglich. Teilt eine Pilotnummer mehrere Berichte, zählt der zuletzt eingelesene.',
+  },
+  'admin.import.action': { owner: 'privacy', text: 'Berichte auswählen' },
+  'admin.import.retention': {
+    owner: 'privacy',
+    text: 'Eingelesene Berichte bleiben nur für diese Sitzung im Arbeitsspeicher und werden auf diesem Gerät nicht gespeichert.',
+  },
+  'admin.import.done': { owner: 'privacy', text: '{count} Bericht(e) eingelesen.' },
+  'admin.import.replaced': { owner: 'privacy', text: 'Davon {count} als neuere Fassung ersetzt.' },
+  'admin.import.rejected': {
+    owner: 'privacy',
+    text: '{count} Datei(en) konnten nicht gelesen werden und wurden übersprungen.',
+  },
+  'admin.import.clear': { owner: 'privacy', text: 'Eingelesene Berichte verwerfen' },
+  'admin.import.count': { owner: 'privacy', text: 'Eingelesen: {count}' },
 
   'admin.export.title': { owner: 'privacy', text: 'CSV-Export anonymisierter Nutzungsdaten' },
   'admin.export.text': {

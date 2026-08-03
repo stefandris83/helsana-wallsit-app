@@ -14,6 +14,7 @@ von dem, was **erst beim Betrieb** greift (spec.md §30).
 | Protokollierung administrativer Zugriffe | `src/data/admin-log.ts`: Zeitpunkt und Aktion, kein Personenbezug, begrenzt auf 200 Eintraege. |
 | Loeschkonzept | `deleteAllData()` entfernt Identitaet, Nutzungsdaten, Ereignis-Log, Blutdruckdaten, Timerzustand und Admin-Log. Zusaetzlich selektives Loeschen der Blutdruckeintraege. |
 | Schutz vor unberechtigtem Export | Der Rohdatenexport ist auf die eigene Person begrenzt; der Pilotexport enthaelt keine Werte. Ein Export medizinisch sensibler Rohdaten ist bewusst nicht implementiert. |
+| Freiwillige Uebermittlung | `src/data/report-sharing.ts`: nur auf Knopfdruck, keine Hintergrundsynchronisation. Der Bericht entsteht aus `PilotParticipantRecord` und wird zusaetzlich um die Profilangaben reduziert. Gegenprobe beim Einlesen in `src/data/report-import.ts`. |
 | Keine Drittanbieter-Tracker | Keine Analytics-Bibliothek, keine externen CDN, keine Schriftdateien von Dritten. |
 | Keine Weitergabe an generative KI-Dienste | Keine KI-Abhaengigkeit im Projekt. |
 | Keine echten Kundendaten | Demodaten sind synthetisch und als solche gekennzeichnet (`src/demo/demo-data.ts`). |
@@ -41,8 +42,13 @@ von dem, was **erst beim Betrieb** greift (spec.md §30).
 | `VITE_INSTRUCTION_VIDEO_TRACK_URL` | Untertitelspur zum Video. | leer |
 | `VITE_FEATURE_SKIP_REST` | Feature-Flag «Pause ueberspringen» (B.13.5), freigabepflichtig. | `false` |
 | `VITE_MIN_GROUP_SIZE` | Mindestgruppengroesse fuer Dashboard-Aggregate (B.13.7). | `5` |
+| `VITE_REPORT_UPLOAD_URL` | Ablageordner fuer geteilte Ergebnisberichte (Abschnitt 5). | leer, Funktion ausgeblendet |
+| `VITE_REPORT_UPLOAD_KEY` | Oeffentlicher Schluessel dazu, ausschliesslich Schreibrecht. | leer, Funktion ausgeblendet |
+| `VITE_REPORT_UPLOAD_BUCKET` | Name des Ablageordners. | `berichte` |
 
-Beispielwerte stehen in `.env.example`. Im Repository liegen keine Secrets.
+Beispielwerte stehen in `.env.example`. Im Repository liegen keine Secrets: der Upload-Schluessel
+ist keines, weil er ausschliesslich schreiben darf und ohnehin im Browser ausgeliefert wird
+(Abschnitt 5).
 
 ## 4. Stub fuer serverseitige Ablage
 
@@ -54,3 +60,22 @@ noetig waeren:
 2. serverseitige Zuordnung der Pilot-ID,
 3. getrennter Dienst fuer Identitaetsdaten (§8),
 4. Konfliktbehandlung bei Mehrgeraetenutzung.
+
+## 5. Ablageordner fuer geteilte Ergebnisberichte
+
+Ergaenzt den local-first Betrieb um einen ausdruecklich ausgeloesten Upload (README, Abschnitt
+«Ergebnisberichte teilen und einlesen»). Betreiber: Supabase, Projekt `wallsit-pilot`, Region
+Zuerich (`eu-central-2`).
+
+| Punkt | Umsetzung |
+|---|---|
+| Transport | HTTPS gegen die Storage-Schnittstelle, kein SDK, kein zusaetzliches Paket |
+| Berechtigung | genau eine Regel auf `storage.objects`: `insert` fuer `anon` im Ordner `berichte` |
+| Lesen und Loeschen | fuer den ausgelieferten Schluessel gesperrt, geprueft am 03.08.2026 |
+| Dateiname | `<Pilotnummer>-<Zeitstempel>.json`, kein Ueberschreiben moeglich |
+| Groesse und Typ | auf 2 MB und `application/json` begrenzt |
+| Konfiguration | `VITE_REPORT_UPLOAD_URL`, `VITE_REPORT_UPLOAD_KEY`, `VITE_REPORT_UPLOAD_BUCKET` |
+| Abschaltung | fehlt einer der ersten beiden Werte, blendet die App die Funktion aus |
+
+Noch offen fuer den Betrieb: Auftragsverarbeitungsvertrag mit dem Betreiber, Loeschfristen fuer
+abgelegte Berichte, Zustimmung des Datenschutzes bei Helsana.

@@ -50,7 +50,7 @@ export const onboardingAccessContent = defineContent({
   },
   'consent.privacyText': {
     owner: 'privacy',
-    text: 'Ihre Angaben bleiben auf diesem Gerät gespeichert. Für die Pilotauswertung werden ausschliesslich anonymisierte Nutzungsdaten ohne Namen und ohne Kontaktangaben verwendet.',
+    text: 'Ihre Angaben bleiben auf diesem Gerät gespeichert. Für die Pilotauswertung können Sie später in den Einstellungen selbst entscheiden, ob Sie einen Ergebnisbericht an Helsana übermitteln möchten. Dieser Bericht enthält ausschliesslich Nutzungsdaten ohne Namen und ohne Kontaktangaben. Ohne Ihr aktives Zutun werden keine Daten übermittelt.',
   },
   'consent.submit': { owner: 'legal', text: 'Bestätigen und weiter' },
   'consent.incomplete': {

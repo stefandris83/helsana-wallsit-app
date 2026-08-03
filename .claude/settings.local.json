@@ -58,7 +58,19 @@
       "Bash(gh api *)",
       "Bash(gh run *)",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d['status'], d['html_url']\\)\")",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "mcp__62743d8a-a777-488d-9ddd-075983454cd7__list_organizations",
+      "mcp__62743d8a-a777-488d-9ddd-075983454cd7__list_projects",
+      "mcp__62743d8a-a777-488d-9ddd-075983454cd7__get_cost",
+      "mcp__62743d8a-a777-488d-9ddd-075983454cd7__confirm_cost",
+      "mcp__62743d8a-a777-488d-9ddd-075983454cd7__create_project",
+      "mcp__62743d8a-a777-488d-9ddd-075983454cd7__execute_sql",
+      "mcp__62743d8a-a777-488d-9ddd-075983454cd7__get_project_url",
+      "mcp__62743d8a-a777-488d-9ddd-075983454cd7__get_publishable_keys",
+      "Bash(curl -s -o /dev/null -w '%{http_code}\\\\n' -X POST __TRACKED_VAR__/storage/v1/object/berichte/P-TEST-probe.json -H 'apikey: __TRACKED_VAR__' -H 'authorization: Bearer __TRACKED_VAR__' -H 'content-type: application/json' --data-binary @probe.json)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}\\\\n' __TRACKED_VAR__/storage/v1/object/berichte/P-TEST-probe.json -H 'apikey: __TRACKED_VAR__' -H 'authorization: Bearer __TRACKED_VAR__')",
+      "Bash(curl -s -X POST __TRACKED_VAR__/storage/v1/object/list/berichte -H 'apikey: __TRACKED_VAR__' -H 'authorization: Bearer __TRACKED_VAR__' -H 'content-type: application/json' -d '{\"prefix\":\"\",\"limit\":100}')",
+      "Bash(git checkout *)"
     ]
   }
 }

@@ -43,6 +43,9 @@ Im Repository liegen keine Secrets.
 | `VITE_INSTRUCTION_VIDEO_TRACK_URL` | Untertitelspur | leer |
 | `VITE_FEATURE_SKIP_REST` | Feature-Flag «Pause ueberspringen» — **freigabepflichtig** | `false` |
 | `VITE_MIN_GROUP_SIZE` | Mindestgruppengroesse im Dashboard | `5` |
+| `VITE_REPORT_UPLOAD_URL` | Ablageordner fuer geteilte Ergebnisberichte | leer, Funktion ausgeblendet |
+| `VITE_REPORT_UPLOAD_KEY` | Oeffentlicher Schluessel dazu, **nur Schreibrecht** | leer, Funktion ausgeblendet |
+| `VITE_REPORT_UPLOAD_BUCKET` | Name des Ablageordners | `berichte` |
 
 `BASE_PATH` ist keine Vite-Variable, sondern eine Build-Variable: sie setzt den Basis-Pfad der
 Auslieferung (`vite.config.ts`). Lokal `/`, auf GitHub Pages `/<repository>/`.
@@ -73,13 +76,80 @@ fuer einen Pilot mit echten Teilnehmerdaten:
   Demo-Wert `pilot-admin-demo`. Ein Repository-Secret `VITE_ADMIN_CODE` uebersteuert ihn, aendert
   aber nichts an der Auslesbarkeit. Das bleibt der in CLAUDE.md B.9 beschriebene Platzhalter und
   ist kein produktiver Authentisierungsmechanismus.
-- Die App ist local-first: Daten liegen im Browser des jeweiligen Geraets. Jede Besucherin und
-  jeder Besucher startet mit leerem Zustand, und das Dashboard zeigt nur, was auf demselben
-  Geraet entstanden ist. Fuer eine Vorfuehrung im Dashboard den Schalter «Demodaten» aktivieren.
+- Die App bleibt local-first: Daten liegen im Browser des jeweiligen Geraets. Jede Besucherin und
+  jeder Besucher startet mit leerem Zustand. Ins Dashboard gelangen fremde Datensaetze nur ueber
+  freiwillig geteilte Ergebnisberichte (siehe naechster Abschnitt) oder ueber den Schalter
+  «Demodaten».
 - Der Einladungscode schuetzt nicht vor Zugriff, er ordnet nur eine Pilot-ID zu. Die Seite ist
   oeffentlich erreichbar; wer die Adresse kennt, kann die App verwenden.
 - Das Repository ist oeffentlich und enthaelt neben dem Code auch `spec.md`, `design-system.md`
   und `CLAUDE.md` sowie das Helsana-Logo (Herkunft siehe «Design System «Unify»»).
+
+## Ergebnisberichte teilen und einlesen
+
+Teilnehmende koennen ihren Trainingsverlauf freiwillig fuer die Pilotauswertung uebermitteln:
+**Einstellungen → Daten → «Ergebnisbericht teilen»**. Der Bericht landet als JSON-Datei in einem
+privaten Ablageordner; die auswertende Person laedt die Dateien dort herunter und liest sie im
+Dashboard unter «Geteilte Ergebnisberichte einlesen» ein.
+
+Der Weg ist bewusst manuell und einmalig pro Knopfdruck. Es gibt **keine** Hintergrund-
+synchronisation: ohne aktives Zutun der Person verlaesst kein Datum das Geraet.
+
+**Warum nicht per E-Mail.** Eine Mail zeigt die Absenderadresse und hebt damit die Pseudonymitaet
+auf, die das Codesystem herstellt. Ueber den Ablageordner kommt nur die Pilotnummer an.
+
+### Was im Bericht steht — und was nicht
+
+| Enthalten | Nicht enthalten |
+|---|---|
+| Pilotnummer | Name, Kontaktangabe, Zugangscode |
+| Trainingseinheiten mit Haltezeiten und Rueckmeldungen | Groesse, Gewicht, Geburtsjahr, Geschlecht |
+| Antworten aus dem Startfragebogen | einzelne Blutdruckwerte |
+| Ereignis-Log, Lernkarten- und Erinnerungsnutzung | Freitextnotizen aus dem Blutdrucktagebuch |
+| Anzahl der Blutdruckeintraege | |
+
+Die Zusammenstellung erzwingt das: der Bericht entsteht aus `PilotParticipantRecord`, der
+Identitaetsdaten gar nicht kennt (B.4), und `buildSharedReport()` entfernt zusaetzlich die
+Profilangaben. `src/data/report-sharing.test.ts` prueft das am erzeugten JSON.
+
+Beim Einlesen greift dieselbe Grenze noch einmal von der anderen Seite: `parseSharedReport()`
+baut den Datensatz aus einem leeren Nutzungsdatensatz auf und uebernimmt nur bekannte Felder.
+Eine manipulierte Datei kann damit keine Profilangaben, Blutdruckwerte oder Freitexte in die
+Auswertung tragen.
+
+### Zugriffsschutz des Ablageordners
+
+Der Ordner liegt bei Supabase (Projekt `wallsit-pilot`, Region Zuerich). Auf `storage.objects`
+existiert **genau eine** Regel: `insert` fuer die Rolle `anon` im Ordner `berichte`. Kein `select`,
+kein `update`, kein `delete`. Der oeffentliche Schluessel im ausgelieferten JavaScript kann damit
+ausschliesslich hochladen. Geprueft am 03.08.2026 gegen die laufende Instanz:
+
+| Aktion mit dem oeffentlichen Schluessel | Ergebnis |
+|---|---|
+| Datei hochladen | 200 |
+| Datei lesen | 400 |
+| Ordner auflisten | leere Liste |
+| Datei loeschen | 400 |
+
+Deshalb ist dieser Schluessel kein Secret und darf im Repository stehen (B.12 bleibt gewahrt).
+Zum Abholen der Dateien braucht es den Projektzugang bei Supabase.
+
+### Grenzen
+
+- **Pseudonym, nicht anonym.** Beim Upload sieht der Betreiber die IP-Adresse. Die auswertende
+  Person sieht sie nicht.
+- **Die Codeverteilung entscheidet.** Wer festhaelt, welche Person welchen Einladungscode erhalten
+  hat, kann jeden Bericht zuordnen. Fuer echte Pseudonymitaet die Codes selbst waehlen lassen und
+  die Zuordnung nicht protokollieren.
+- **Eingelesene Berichte werden nicht gespeichert.** Sie bleiben nur fuer die Sitzung im
+  Arbeitsspeicher des Dashboards und sind nach einem Reload erneut einzulesen. Das ist Absicht:
+  auf dem Geraet der auswertenden Person entsteht keine Datensammlung.
+- **Abweichung von CLAUDE.md B.4.** Die Vorgabe «im MVP verlassen keine Daten das Geraet» ist mit
+  dieser Funktion nicht mehr uneingeschraenkt erfuellt. Der Auftraggeber hat sie am 03.08.2026
+  ausdruecklich gewuenscht, nachdem der Mailweg als Bruch der Pseudonymitaet erkannt wurde. Die
+  Einwilligungs- und Datenschutztexte wurden entsprechend angepasst und sind neu freizugeben.
+- **Vor einem Pilot mit echten Teilnehmenden** braucht es einen Auftragsverarbeitungsvertrag mit
+  dem Betreiber des Ablageordners und die Zustimmung des Datenschutzes bei Helsana.
 
 ## Projektstruktur
 

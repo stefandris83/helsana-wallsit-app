@@ -13,7 +13,9 @@ export type AdminAction =
   | 'dashboard_viewed'
   | 'filter_changed'
   | 'export_sessions'
-  | 'export_events';
+  | 'export_events'
+  | 'reports_imported'
+  | 'reports_cleared';
 
 export interface AdminLogEntry {
   id: string;

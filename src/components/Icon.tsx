@@ -35,6 +35,7 @@ export type IconName =
   | 'edit'
   | 'delete'
   | 'download'
+  | 'upload'
   | 'calendar'
   | 'clock'
   | 'notification'
@@ -94,6 +95,8 @@ const paths: Record<IconName, string> = {
     'M7 19a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V8H7v11zM17.5 5H15l-.7-.8a1 1 0 0 0-.7-.2h-3.2a1 1 0 0 0-.7.2L9 5H6.5a1 1 0 0 0 0 2h11a1 1 0 0 0 0-2z',
   download:
     'M12 15.6a1 1 0 0 1-.7-.3l-4-4a1 1 0 0 1 1.4-1.4l2.3 2.3V4a1 1 0 0 1 2 0v8.2l2.3-2.3a1 1 0 0 1 1.4 1.4l-4 4a1 1 0 0 1-.7.3zM5 18h14a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2z',
+  upload:
+    'M12 4a1 1 0 0 1 .7.3l4 4a1 1 0 1 1-1.4 1.4L13 7.4v8.2a1 1 0 0 1-2 0V7.4L8.7 9.7a1 1 0 0 1-1.4-1.4l4-4A1 1 0 0 1 12 4zM5 18h14a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2z',
   calendar:
     'M6 3a1 1 0 0 1 1 1v1h10V4a1 1 0 0 1 2 0v1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2V4a1 1 0 0 1 1-1zM5 10v9h14v-9H5z',
   clock:

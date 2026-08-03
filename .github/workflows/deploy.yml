@@ -44,6 +44,14 @@ jobs:
           VITE_ADMIN_CODE: ${{ secrets.VITE_ADMIN_CODE || 'pilot-admin-demo' }}
           VITE_FEATURE_SKIP_REST: 'false'
           VITE_MIN_GROUP_SIZE: '5'
+          # Ablageordner fuer freiwillig geteilte Ergebnisberichte.
+          # Diese beiden Werte sind bewusst keine Secrets: der Schluessel darf
+          # ausschliesslich hochladen, nicht lesen und nicht auflisten, und er
+          # wird ohnehin im Browser ausgeliefert. Ueber Repository-Variablen
+          # ueberschreibbar, ohne den Workflow zu aendern.
+          VITE_REPORT_UPLOAD_URL: ${{ vars.REPORT_UPLOAD_URL || 'https://dooujsoadubsikihrvqw.supabase.co' }}
+          VITE_REPORT_UPLOAD_KEY: ${{ vars.REPORT_UPLOAD_KEY || 'sb_publishable_t8isCuQdd7iF_SVLVuw06Q_c1dixx7c' }}
+          VITE_REPORT_UPLOAD_BUCKET: ${{ vars.REPORT_UPLOAD_BUCKET || 'berichte' }}
         run: npm run build
 
       - uses: actions/configure-pages@v5

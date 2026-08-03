@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
@@ -26,6 +26,8 @@ import type { DistributionEntry } from '../../data/aggregation';
 import { logAdminAction } from '../../data/admin-log';
 import { exportEventsCsv, exportSessionsCsv } from '../../data/export';
 import { buildPilotDataset, todayIso } from '../../data/pilot-dataset';
+import type { PilotParticipantRecord } from '../../data/pilot-dataset';
+import { importReportFiles } from '../../data/report-import';
 import { demoPilotRecords } from '../../demo/demo-data';
 import { PROGRAM_WEEKS } from '../../domain/week-matrix';
 
@@ -80,10 +82,34 @@ export function AdminScreen() {
   const [includeDemo, setIncludeDemo] = useState(false);
   const [filters, setFilters] = useState<DashboardFilters>(defaultFilters);
 
+  /**
+   * Eingelesene Ergebnisberichte. Bewusst nur im Arbeitsspeicher: sie werden
+   * auf dem Geraet der auswertenden Person nicht abgelegt.
+   */
+  const [imported, setImported] = useState<PilotParticipantRecord[]>([]);
+  const [importNotice, setImportNotice] = useState<string[]>([]);
+  const fileInput = useRef<HTMLInputElement>(null);
+
+  const readReports = async (fileList: FileList | null) => {
+    if (!fileList || fileList.length === 0) return;
+    const outcome = await importReportFiles([...fileList], imported);
+    setImported(outcome.records);
+    const messages = [t('admin.import.done', { count: fileList.length - outcome.rejected.length })];
+    if (outcome.replaced.length > 0) {
+      messages.push(t('admin.import.replaced', { count: outcome.replaced.length }));
+    }
+    if (outcome.rejected.length > 0) {
+      messages.push(t('admin.import.rejected', { count: outcome.rejected.length }));
+    }
+    setImportNotice(messages);
+    logAdminAction('reports_imported');
+    if (fileInput.current) fileInput.current.value = '';
+  };
+
   const today = todayIso();
   const records = useMemo(
-    () => buildPilotDataset(includeDemo ? demoPilotRecords() : []),
-    [includeDemo],
+    () => buildPilotDataset([...(includeDemo ? demoPilotRecords() : []), ...imported]),
+    [includeDemo, imported],
   );
   const metrics = useMemo(
     () => aggregate(records, filters, today, config.minGroupSize),
@@ -159,6 +185,52 @@ export function AdminScreen() {
       <InlineNotification type="info" iconLabel={t('admin.privacyNotice')}>
         {t('admin.privacyNotice')}
       </InlineNotification>
+
+      <Card>
+        <div className="flex flex-col gap-frog">
+          <h2 className="h5">{t('admin.import.title')}</h2>
+          <p className="body-m-copy">{t('admin.import.text')}</p>
+          <input
+            ref={fileInput}
+            id="admin-import"
+            type="file"
+            accept="application/json,.json"
+            multiple
+            className="u-visually-hidden"
+            onChange={(event) => void readReports(event.target.files)}
+          />
+          <Button
+            variant="secondary"
+            block
+            iconLeft="upload"
+            onClick={() => fileInput.current?.click()}
+          >
+            {t('admin.import.action')}
+          </Button>
+          {importNotice.length > 0 ? (
+            <InlineNotification type="success" iconLabel={importNotice[0]}>
+              {importNotice.join(' ')}
+            </InlineNotification>
+          ) : null}
+          {imported.length > 0 ? (
+            <>
+              <p className="body-m">{t('admin.import.count', { count: imported.length })}</p>
+              <Button
+                variant="secondary"
+                block
+                onClick={() => {
+                  setImported([]);
+                  setImportNotice([]);
+                  logAdminAction('reports_cleared');
+                }}
+              >
+                {t('admin.import.clear')}
+              </Button>
+            </>
+          ) : null}
+          <p className="helper-m text-secondary">{t('admin.import.retention')}</p>
+        </div>
+      </Card>
 
       <Card>
         <div className="flex flex-col gap-frog">
