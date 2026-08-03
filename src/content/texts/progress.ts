@@ -1,0 +1,61 @@
+import { defineContent } from '../types';
+
+/** Fortschrittsbereich (§20) und Meilensteine (§21 F). */
+export const progressContent = defineContent({
+  'progress.title': { owner: 'product', text: 'Fortschritt' },
+  'progress.lead': {
+    owner: 'product',
+    text: 'Hier sehen Sie ausschliesslich Ihren Trainings- und Verhaltensfortschritt.',
+  },
+  'progress.currentWeek': { owner: 'product', text: 'Aktuelle Programmwoche' },
+  'progress.completedWeeks': { owner: 'product', text: 'Abgeschlossene Programmwochen' },
+  'progress.sessionsThisWeek': { owner: 'product', text: 'Einheiten diese Woche' },
+  'progress.sessionsTotal': { owner: 'product', text: 'Einheiten insgesamt' },
+  'progress.completionSplit': { owner: 'product', text: 'Durchführung' },
+  'progress.completionSplit.full': { owner: 'product', text: 'Vollständig' },
+  'progress.completionSplit.partial': { owner: 'product', text: 'Teilweise' },
+  'progress.completionSplit.none': { owner: 'product', text: 'Nicht durchgeführt' },
+  'progress.targetsReached': { owner: 'product', text: 'Erreichte Zwischenziele' },
+  'progress.optionalTargets': { owner: 'product', text: 'Freiwillige Zusatzziele' },
+  'progress.calendarTitle': { owner: 'product', text: 'Ihre Trainingstage' },
+  'progress.calendarWeekLabel': { owner: 'product', text: 'Woche {week}' },
+  'progress.calendarLegendDone': { owner: 'product', text: 'Einheit durchgeführt' },
+  'progress.calendarLegendPlanned': { owner: 'product', text: 'Geplanter Trainingstag' },
+  'progress.calendarLegendOpen': { owner: 'product', text: 'Ohne Eintrag' },
+  'progress.streakCurrent': { owner: 'product', text: 'Aktuelle Serie' },
+  'progress.streakLongest': { owner: 'product', text: 'Längste Serie' },
+  'progress.streakUnit': { owner: 'product', text: 'geplante Trainingstage in Folge' },
+  'progress.streakExplainer': {
+    owner: 'product',
+    text: 'Gezählt werden aufeinanderfolgende geplante Trainingstage, an denen Sie eine Einheit durchgeführt haben. Ein heutiger offener Trainingstag unterbricht die Serie nicht.',
+  },
+  'progress.averageExertion': { owner: 'product', text: 'Durchschnittliche empfundene Belastung' },
+  'progress.averageExertionEmpty': {
+    owner: 'product',
+    text: 'Noch keine Rückmeldung vorhanden.',
+  },
+  'progress.averageHold': { owner: 'product', text: 'Durchschnittliche Haltezeit pro Satz' },
+  'progress.beforeStart': {
+    owner: 'product',
+    text: 'Ihr Programm startet am {day}. Bis dahin gibt es hier noch nichts zu zeigen.',
+  },
+  'progress.empty': {
+    owner: 'product',
+    text: 'Sobald Sie die erste Einheit abgeschlossen haben, erscheint hier Ihr Fortschritt.',
+  },
+
+  'milestone.title': { owner: 'marketing', text: 'Meilensteine' },
+  'milestone.reachedBadge': { owner: 'marketing', text: 'Erreicht' },
+  'milestone.openBadge': { owner: 'marketing', text: 'Offen' },
+  'milestone.first-session': { owner: 'marketing', text: 'Erste Einheit abgeschlossen.' },
+  'milestone.first-full-week': { owner: 'marketing', text: 'Erste vollständige Trainingswoche.' },
+  'milestone.five-sessions': { owner: 'marketing', text: 'Fünf Einheiten abgeschlossen.' },
+  'milestone.ten-sessions': { owner: 'marketing', text: 'Zehn Einheiten abgeschlossen.' },
+  'milestone.four-weeks': { owner: 'marketing', text: 'Vier Programmwochen geschafft.' },
+  'milestone.halftime': { owner: 'marketing', text: 'Halbzeit erreicht.' },
+  'milestone.eight-weeks': { owner: 'marketing', text: 'Acht Programmwochen geschafft.' },
+  'milestone.twelve-weeks': { owner: 'marketing', text: 'Zwölf Programmwochen geschafft.' },
+  'milestone.program-completed': { owner: 'marketing', text: 'Programm abgeschlossen.' },
+  'milestone.weekGoalReached': { owner: 'marketing', text: 'Wochenziel erreicht.' },
+  'milestone.newAnnouncement': { owner: 'marketing', text: 'Neuer Meilenstein: {text}' },
+});

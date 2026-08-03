@@ -1,0 +1,590 @@
+/*
+ * CSS-Referenzimplementierung aus design-system.md Kapitel 12.23,
+ * ergaenzt um die im MVP tatsaechlich benoetigten Komponenten
+ * (Card, Radio, Checkbox, Stepper, Fortschrittsring, Bottom-Navigation).
+ * Ausschliesslich Semantic Tokens, keine Hex-Werte.
+ */
+
+/* ---------- Fokus-Ring – ein einziges Muster fuer alle Komponenten (12.2) ---------- */
+.u-focus-ring {
+  position: relative;
+}
+.u-focus-ring:focus-visible {
+  outline: none;
+}
+.u-focus-ring:focus-visible::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border: var(--border-focus-width) solid var(--border-focus);
+  border-radius: calc(var(--radius, var(--border-radius-2px)) + 5px);
+  pointer-events: none;
+}
+
+/* ---------- Button ---------- */
+.u-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-snail);
+  min-height: 56px;
+  min-width: 56px;
+  padding: var(--space-rat) var(--space-dog);
+  font: var(--body-m-bold);
+  border: none;
+  border-radius: var(--border-radius-2px);
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}
+.u-btn--small {
+  min-height: 40px;
+  min-width: 40px;
+  padding: var(--space-snail) var(--space-rat);
+  font: var(--body-s-bold);
+}
+.u-btn--block {
+  width: 100%;
+}
+
+.u-btn--primary {
+  background: var(--interactive-primary);
+  color: var(--text-on-interactive-primary);
+}
+.u-btn--primary:hover:not(:disabled),
+.u-btn--primary:active:not(:disabled) {
+  background: var(--interactive-primary-hover);
+}
+.u-btn--primary:disabled {
+  background: var(--interactive-disabled);
+  color: var(--text-on-interactive-disabled);
+  cursor: not-allowed;
+}
+
+.u-btn--secondary {
+  background: transparent;
+  color: var(--interactive-primary);
+  border: var(--border-width-m) solid var(--interactive-primary);
+}
+.u-btn--secondary:hover:not(:disabled),
+.u-btn--secondary:active:not(:disabled) {
+  border-width: var(--border-width-l);
+  border-color: var(--interactive-primary-hover);
+}
+.u-btn--secondary:disabled {
+  border-color: var(--interactive-disabled);
+  color: var(--text-on-interactive-disabled);
+  cursor: not-allowed;
+}
+
+.u-btn--on-colored.u-btn--primary {
+  background: var(--interactive-primary-on-colored-bg);
+  color: var(--interactive-secondary);
+}
+.u-btn--on-colored.u-btn--primary:hover:not(:disabled) {
+  background: var(--interactive-primary-on-colored-bg-hover);
+}
+.u-btn--on-colored.u-btn--secondary {
+  color: var(--text-on-colored-bg);
+  border-color: var(--interactive-primary-on-colored-bg);
+}
+
+/* ---------- Icon Button (12.5) ---------- */
+.u-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: var(--space-bee);
+  background: transparent;
+  color: var(--text-primary);
+  border: none;
+  border-radius: var(--border-radius-full);
+  cursor: pointer;
+  --radius: var(--border-radius-full);
+}
+.u-icon-btn:hover:not(:disabled),
+.u-icon-btn:active:not(:disabled) {
+  background: var(--background-subtle-neutral);
+}
+.u-icon-btn:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+/* ---------- Action-Link (12.6) ---------- */
+.u-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-bee);
+  padding-top: var(--space-ant);
+  padding-inline: var(--space-bee);
+  min-height: 44px;
+  font: var(--body-s-bold);
+  color: var(--interactive-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.u-link:hover:not(:disabled),
+.u-link:active:not(:disabled) {
+  color: var(--interactive-primary-hover);
+}
+.u-link:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+/* ---------- Input / Textarea (12.7, 12.8) ---------- */
+.u-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-snail);
+}
+.u-field__label {
+  font: var(--body-s);
+  color: var(--text-secondary);
+}
+.u-input {
+  display: flex;
+  align-items: center;
+  gap: var(--space-snail);
+  height: 56px;
+  width: 100%;
+  padding: var(--space-rat);
+  background: var(--background-device);
+  color: var(--text-primary);
+  font: var(--body-m);
+  border: var(--border-width-s) solid var(--border);
+  border-radius: var(--border-radius-2px);
+}
+.u-input::placeholder {
+  color: var(--text-tertiary);
+}
+.u-input:focus {
+  border-width: var(--border-width-m);
+  border-color: var(--border-focus);
+  outline: none;
+}
+.u-input[aria-invalid='true'] {
+  border-color: var(--status-error);
+}
+.u-input:disabled {
+  border-color: var(--border-light);
+  color: var(--text-disabled);
+}
+.u-textarea {
+  min-height: 68px;
+  height: auto;
+  padding: var(--space-chicken) var(--space-frog) var(--space-frog);
+  resize: vertical;
+  font: var(--body-m);
+}
+.u-input-error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-bee);
+  font: var(--body-s);
+  color: var(--status-text-error);
+}
+
+/* ---------- Select (12.9) ---------- */
+.u-select {
+  appearance: none;
+  background-image: none;
+  cursor: pointer;
+}
+
+/* ---------- Checkbox / Radio (12.10, 12.11) ---------- */
+.u-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-snail);
+  min-height: 44px;
+  padding-block: var(--space-snail);
+  cursor: pointer;
+}
+.u-choice--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.u-choice__box {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: var(--border-width-m) solid var(--text-secondary);
+  border-radius: var(--border-radius-2px);
+  background: transparent;
+  color: var(--constant-white);
+}
+.u-choice__box--round {
+  border-radius: var(--border-radius-full);
+  --radius: var(--border-radius-full);
+}
+/*
+ * Auswahlzustand in der Markenfarbe. Abweichung von design-system.md
+ * Kapitel 12.10/12.11, die dafuer `text-primary` vorsehen; auf Wunsch des
+ * Auftraggebers markiert die Auswahl in `interactive-primary`.
+ */
+.u-choice__box--checked {
+  background: var(--interactive-primary);
+  border-color: var(--interactive-primary);
+}
+.u-choice__box--round.u-choice__box--checked {
+  background: transparent;
+}
+.u-choice__dot {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--border-radius-full);
+  background: var(--interactive-primary);
+}
+.u-choice__box--error {
+  border-color: var(--status-error);
+}
+.u-choice__label {
+  font: var(--body-m);
+  color: var(--text-primary);
+}
+
+/* Auswahlkarte (Checkbox-Box 12.22) */
+.u-choice-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-frog);
+  width: 100%;
+  min-height: 56px;
+  padding: var(--space-rat);
+  text-align: left;
+  background: var(--background-card);
+  border: var(--border-width-s) solid var(--border-card);
+  border-radius: var(--border-radius-4px);
+  --radius: var(--border-radius-4px);
+  cursor: pointer;
+}
+.u-choice-card:hover {
+  background: var(--background-hover);
+}
+.u-choice-card--selected {
+  border-width: var(--border-width-m);
+  border-color: var(--interactive-primary);
+}
+
+/* ---------- Card ---------- */
+.u-card {
+  background: var(--background-card);
+  border: var(--border-width-s) solid var(--border-card);
+  border-radius: var(--border-radius-4px);
+  padding: var(--space-rat);
+  --radius: var(--border-radius-4px);
+}
+.u-card--elevated {
+  box-shadow: var(--shadow-m);
+}
+
+/* ---------- Pill / Tab (12.17) ---------- */
+.u-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  height: auto;
+  padding: var(--space-bee) var(--space-frog);
+  border-radius: var(--border-radius-full);
+  --radius: var(--border-radius-full);
+  background: var(--background-subtle-neutral);
+  color: var(--text-primary);
+  font: var(--body-m);
+  border: none;
+  cursor: pointer;
+}
+.u-pill[aria-selected='true'],
+.u-pill[aria-pressed='true'],
+.u-pill--active {
+  background: var(--interactive-primary-hover);
+  color: var(--text-on-interactive-primary);
+  font: var(--body-m-bold);
+}
+
+/* ---------- Toggle (12.12) ---------- */
+.u-toggle {
+  flex: 0 0 auto;
+  width: 64px;
+  height: 28px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  background: var(--text-tertiary);
+  border-radius: var(--border-radius-full);
+  --radius: var(--border-radius-full);
+  border: none;
+  cursor: pointer;
+}
+.u-toggle[aria-checked='true'] {
+  background: var(--status-success);
+  justify-content: flex-end;
+}
+.u-toggle__knob {
+  width: 36px;
+  height: 24px;
+  border-radius: var(--border-radius-full);
+  background: var(--constant-white);
+  box-shadow: var(--shadow-s);
+}
+.u-toggle:disabled {
+  background: var(--interactive-disabled);
+  cursor: not-allowed;
+}
+.u-toggle:disabled .u-toggle__knob {
+  background: var(--text-on-interactive-disabled);
+}
+
+/* ---------- Inline Notification (12.15) ---------- */
+.u-notification {
+  display: flex;
+  gap: var(--space-frog);
+  padding: var(--space-frog);
+  border-radius: var(--border-radius-2px);
+}
+.u-notification--info {
+  background: var(--status-light-bg-info);
+  color: var(--status-text-info-on-light-bg);
+}
+.u-notification--success {
+  background: var(--status-light-bg-success);
+  color: var(--status-text-success-on-light-bg);
+}
+.u-notification--warning {
+  background: var(--status-light-bg-warning);
+  color: var(--status-text-warning-on-light-bg);
+}
+.u-notification--error {
+  background: var(--status-light-bg-error);
+  color: var(--status-text-error-on-light-bg);
+}
+.u-notification--neutral {
+  background: var(--background-subtle-neutral);
+  color: var(--text-primary);
+}
+
+/* ---------- Stepper (12.18) ---------- */
+.u-stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-bee);
+}
+.u-stepper__circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--border-radius-full);
+  background: var(--border-light);
+  color: var(--text-secondary);
+  font: var(--body-s);
+}
+.u-stepper__circle--current {
+  background: var(--text-primary);
+  color: var(--background-device);
+  font: var(--body-s-bold);
+}
+.u-stepper__circle--done {
+  background: var(--status-success);
+  color: var(--constant-white);
+}
+.u-stepper__connector {
+  flex: 1 1 auto;
+  height: 2px;
+  background: var(--border-light);
+}
+.u-stepper__connector--done {
+  background: var(--status-success);
+}
+
+/* ---------- Dialog (12.14) ---------- */
+.u-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--background-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-rat);
+  z-index: 50;
+}
+.u-dialog {
+  width: 100%;
+  max-width: 327px;
+  padding: var(--space-cat);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-cat);
+  background: var(--background-card);
+  border-radius: var(--border-radius-2px);
+  box-shadow: var(--shadow-l);
+}
+@media (min-width: 768px) {
+  .u-dialog {
+    max-width: 504px;
+  }
+}
+
+/* ---------- Bottom-Navigation (abgeleitet aus .Menu Item 12.20, Mobile) ---------- */
+.u-bottom-nav {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  background: var(--background-card);
+  border-top: var(--border-width-s) solid var(--border-light);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  z-index: 20;
+}
+.u-bottom-nav__item {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-ant);
+  padding: var(--space-snail) var(--space-bee);
+  color: var(--text-primary);
+  font: var(--helper-m);
+  text-decoration: none;
+  border-top: var(--border-width-l) solid transparent;
+}
+.u-bottom-nav__item[aria-current='page'] {
+  color: var(--text-nav-selected);
+  border-top-color: var(--text-nav-selected);
+  font: var(--font-weight-bold) 12px / 1.4 var(--font-family-base);
+}
+
+/* ---------- Fortschrittsring des Timers (§18) ---------- */
+.u-progress-ring {
+  position: relative;
+  width: 100%;
+  max-width: 240px;
+  margin-inline: auto;
+}
+.u-progress-ring__track {
+  stroke: var(--border-light);
+}
+.u-progress-ring__value {
+  stroke: var(--text-primary);
+}
+/* Erreichtes bzw. sich naeherndes Zwischenziel — dekoratives Gruen, kein Status-Token. */
+.u-progress-ring__reached {
+  stroke: var(--decorative-green-darker);
+}
+/* Freiwillige Zusatzzeit. */
+.u-progress-ring__optional {
+  stroke: var(--text-decorative);
+}
+.u-progress-ring__value,
+.u-progress-ring__reached,
+.u-progress-ring__optional {
+  transition:
+    stroke-dasharray 0.3s linear,
+    stroke-dashoffset 0.3s linear,
+    opacity 0.6s linear;
+}
+
+/* ---------- Meilenstein-Animation (§21 F) ---------- */
+@keyframes u-milestone-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.u-milestone {
+  animation: u-milestone-in 0.4s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Textfarben ueber Semantic Tokens ----------
+   Direkte 1:1-Bindung der `text-*`-Tokens aus design-system.md Kapitel 3.1,
+   analog zu den Typo-Utilities in Kapitel 10.7. Notwendig, weil Tailwind aus
+   `colors.text.primary` die Klasse `text-text-primary` erzeugen wuerde; das
+   Design System schreibt die Schreibweise `text-*` vor (Kapitel 9.1). */
+.text-primary {
+  color: var(--text-primary);
+}
+.text-secondary {
+  color: var(--text-secondary);
+}
+.text-tertiary {
+  color: var(--text-tertiary);
+}
+.text-disabled {
+  color: var(--text-disabled);
+}
+.text-brand {
+  color: var(--text-brand);
+}
+.text-decorative {
+  color: var(--text-decorative);
+}
+/* Erreichtes Zwischenziel — dekoratives Gruen, bewusst kein Status-Token. */
+.text-decorative-green {
+  color: var(--decorative-green-darker);
+}
+.text-on-colored-bg {
+  color: var(--text-on-colored-bg);
+}
+.text-on-interactive-primary {
+  color: var(--text-on-interactive-primary);
+}
+
+/* Heutiger Tag im Trainingskalender — Kennzeichnung ohne bewertende Farbe. */
+.u-today-cell {
+  box-shadow: inset 0 0 0 var(--border-width-m) var(--text-primary);
+}
+
+/* ---------- Kleine Layout-Hilfen ---------- */
+/* Tailwind-Randbreiten wie `border-s`/`border-l` kollidieren mit den logischen
+   Seiten-Utilities. Raender laufen deshalb ueber diese Klassen. */
+.u-border-top {
+  border-top: var(--border-width-s) solid var(--border-light);
+}
+.u-border-bottom {
+  border-bottom: var(--border-width-s) solid var(--border-light);
+}
+.u-divider {
+  height: 1px;
+  background: var(--border-light);
+  border: none;
+  margin: 0;
+}
+
+/* ---------- Nur fuer Screenreader ---------- */
+.u-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

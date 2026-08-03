@@ -1,0 +1,63 @@
+name: Build und Deploy auf GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Laufende Deployments nicht abbrechen, aber nur eines gleichzeitig zulassen.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint, Typecheck und Tests
+        run: |
+          npm run lint
+          npm run typecheck
+          npm run test
+
+      - name: Build
+        env:
+          # Projekt-Pages liegen unter https://<konto>.github.io/<repository>/
+          BASE_PATH: /${{ github.event.repository.name }}/
+          # Zugangscode fuer /admin. KEIN produktiver Authentisierungsmechanismus:
+          # der Wert wird in das ausgelieferte JavaScript kompiliert und ist damit
+          # fuer jede Besucherin und jeden Besucher lesbar (siehe README).
+          VITE_ADMIN_CODE: ${{ secrets.VITE_ADMIN_CODE || 'pilot-admin-demo' }}
+          VITE_FEATURE_SKIP_REST: 'false'
+          VITE_MIN_GROUP_SIZE: '5'
+        run: npm run build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,559 @@
+/*
+ * Helsana Design System «Unify» — Token-Definitionsdatei.
+ * Uebernommen aus design-system.md, Kapitel 8 (Layout), 10.1–10.8.
+ * Dies ist die EINZIGE Datei, in der Primitives und Hex-Werte vorkommen duerfen
+ * (design-system.md Kapitel 1, Regel 1).
+ */
+
+/* ===================== 10.1 Primitives + Foundations ===================== */
+:root {
+  /* ===== Basic ===== */
+  --basic-black: #000000;
+  --basic-white: #ffffff;
+
+  /* ===== Neutral ===== */
+  --neutral-100: #f8f8f8;
+  --neutral-200: #f2f2f2;
+  --neutral-300: #e0e0e0;
+  --neutral-400: #b2b2b2;
+  --neutral-500: #949494;
+  --neutral-600: #707070;
+  --neutral-700: #404040;
+  --neutral-800: #202020;
+
+  /* ===== Brand ===== */
+  --brand-100: #ebced9;
+  --brand-200: #d79db3;
+  --brand-300: #c2587f;
+  --brand-400: #ad0b49;
+  --brand-500: #9a0941;
+  --brand-600: #7d1c3a;
+  --brand-700: #6d062e;
+  --brand-800: #550524;
+
+  /* ===== Pink ===== */
+  --pink-100: #fae5ec;
+  --pink-200: #f6cadb;
+  --pink-300: #ef96b6;
+  --pink-400: #e55086;
+  --pink-500: #f20d78;
+  --pink-600: #df006d;
+  --pink-700: #b8005a;
+  --pink-800: #98034d;
+
+  /* ===== Purple ===== */
+  --purple-100: #eeecf7;
+  --purple-200: #ded9ef;
+  --purple-300: #bdb3dd;
+  --purple-400: #9181c6;
+  --purple-500: #7e6cbc;
+  --purple-600: #5d45b0;
+  --purple-700: #463484;
+  --purple-800: #3a3255;
+
+  /* ===== Blue ===== */
+  --blue-100: #e6f3fb;
+  --blue-200: #d0e7f5;
+  --blue-300: #a1ceec;
+  --blue-400: #62aedf;
+  --blue-500: #409dd8;
+  --blue-600: #2887c3;
+  --blue-700: #1f6694;
+  --blue-800: #0d4d77;
+
+  /* ===== Yellow ===== */
+  --yellow-100: #fff6d9;
+  --yellow-200: #ffeeb2;
+  --yellow-300: #fedd66;
+  --yellow-400: #fec600;
+  --yellow-500: #e5b300;
+  --yellow-600: #b48d00;
+  --yellow-700: #8c6d00;
+  --yellow-800: #5f4911;
+
+  /* ===== Green ===== */
+  --green-100: #f2f7e0;
+  --green-200: #e9efc1;
+  --green-300: #d3df82;
+  --green-400: #b6ca2f;
+  --green-500: #a4b62a;
+  --green-600: #66801a;
+  --green-700: #4a6317;
+  --green-800: #344b11;
+
+  /* ===== Ecru ===== */
+  --ecru-100: #f5f2ed;
+  --ecru-200: #ece5db;
+  --ecru-300: #d8cab6;
+  --ecru-400: #bea786;
+  --ecru-500: #b49a74;
+  --ecru-600: #866548;
+  --ecru-700: #5c4337;
+  --ecru-800: #503b33;
+
+  /* ===== Status Red / Green ===== */
+  --status-red-100: #ffe4e1;
+  --status-red-200: #ffc8c1;
+  --status-red-300: #ffaa99;
+  --status-red-400: #ff715f;
+  --status-red-500: #ff4d37;
+  --status-red-600: #eb2c14;
+  --status-red-700: #a41200;
+  --status-red-800: #7e1205;
+  --status-green-100: #effbdc;
+  --status-green-200: #daf2b2;
+  --status-green-300: #bbe96e;
+  --status-green-400: #92da00;
+  --status-green-500: #72be00;
+  --status-green-600: #5e9801;
+  --status-green-700: #3c6a00;
+  --status-green-800: #2c4f00;
+
+  /* ===== Transparency ===== */
+  --black-opacity-60: #00000099;
+  --black-opacity-80: #000000cc;
+  --white-opacity-60: #ffffff99;
+  --white-opacity-80: #ffffffcc;
+
+  /* ===== Gradients ===== */
+  --gradient-blue-red: linear-gradient(135deg, #409dd8 0%, #ad0b49 100%);
+  --gradient-red-purple: linear-gradient(135deg, #ad0b49 0%, #9181c6 50%, #5d45b0 100%);
+
+  /* ===== Typography ===== */
+  --font-family-base: 'Akkurat Helsana', 'Helvetica Neue', Arial, sans-serif;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+
+  /* ===== Spacing ===== */
+  --space-none: 0;
+  --space-ant: 2px;
+  --space-bee: 4px;
+  --space-snail: 8px;
+  --space-frog: 12px;
+  --space-rat: 16px;
+  --space-chicken: 20px;
+  --space-cat: 24px;
+  --space-dog: 32px;
+  --space-donkey: 40px;
+  --space-gorilla: 48px;
+  --space-lion: 56px;
+  --space-grizzly: 64px;
+  --space-rhino: 80px;
+  --space-elephant: 96px;
+
+  /* ===== Border ===== */
+  --border-radius-0px: 0px;
+  --border-radius-2px: 2px;
+  --border-radius-4px: 4px;
+  --border-radius-6px: 6px;
+  --border-radius-8px: 8px;
+  --border-radius-16px: 16px;
+  --border-radius-full: 9999px;
+  --border-width-none: 0px;
+  --border-width-s: 1px;
+  --border-width-m: 2px;
+  --border-width-l: 4px;
+  /* Fokus-Ring, design-system.md Kapitel 12.2 */
+  --border-focus-width: 1px;
+
+  /* ===== Shadows ===== */
+  --shadow-s: 0px 1px 4px 0px rgba(0, 0, 0, 0.16);
+  --shadow-m: 1px 6px 20px -8px rgba(0, 0, 0, 0.12);
+  --shadow-m-hover: 1px 12px 24px -12px rgba(0, 0, 0, 0.32);
+  --shadow-l: 0px 4px 32px -8px rgba(0, 0, 0, 0.16);
+  --shadow-l-hover: 0px 8px 40px -12px rgba(0, 0, 0, 0.32);
+  --shadow-border: 0px 12px 16px -8px rgba(0, 0, 0, 0.16);
+
+  /* ===== 8. Grid & Layout ===== */
+  --breakpoint-mobile: 375px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1024px;
+  --layout-max-width: 1280px;
+  --layout-margin-mobile: 16px;
+  --layout-margin-tablet: 32px;
+  --layout-margin-desktop: 40px;
+  --layout-gutter: 16px;
+
+  /* ===== Font-Shorthands fuer die CSS-Referenzimplementierung (Kapitel 12.23) ===== */
+  --body-l: var(--font-weight-regular) 18px / 1.4 var(--font-family-base);
+  --body-l-bold: var(--font-weight-bold) 18px / 1.4 var(--font-family-base);
+  --body-m: var(--font-weight-regular) 16px / 1.4 var(--font-family-base);
+  --body-m-bold: var(--font-weight-bold) 16px / 1.4 var(--font-family-base);
+  --body-m-copy: var(--font-weight-regular) 16px / 1.5 var(--font-family-base);
+  --body-s: var(--font-weight-regular) 14px / 1.4 var(--font-family-base);
+  --body-s-bold: var(--font-weight-bold) 14px / 1.4 var(--font-family-base);
+  --helper-m: var(--font-weight-regular) 12px / 1.4 var(--font-family-base);
+}
+
+/* ===================== 10.2 Semantic Tokens – Light (Basis) ===================== */
+:root,
+[data-color-mode='light'] {
+  /* Text */
+  --text-primary: var(--neutral-800);
+  --text-secondary: var(--neutral-600);
+  --text-tertiary: var(--neutral-500);
+  --text-disabled: var(--neutral-400);
+  --text-brand: var(--brand-500);
+  --text-decorative: var(--purple-500);
+  --text-nav-selected: var(--brand-500);
+  --text-on-colored-bg: var(--basic-white);
+  --text-on-interactive-primary: var(--basic-white);
+  --text-on-interactive-disabled: var(--neutral-400);
+
+  /* Interactive */
+  --interactive-primary: var(--brand-500);
+  --interactive-primary-hover: var(--brand-400);
+  --interactive-secondary: var(--pink-500);
+  --interactive-disabled: var(--neutral-300);
+  --interactive-primary-on-colored-bg: var(--basic-white);
+  --interactive-primary-on-colored-bg-hover: var(--brand-100);
+  --interactive-disabled-on-colored-bg: var(--neutral-800);
+
+  /* Background */
+  --background-device: var(--basic-white);
+  --background-card: var(--basic-white);
+  --background-subtle-neutral: var(--neutral-100);
+  --background-medium-neutral: var(--neutral-200);
+  --background-brand: var(--brand-500);
+  --background-hover: var(--neutral-200);
+  --background-decorative-light: var(--purple-100);
+  --background-overlay: var(--black-opacity-60);
+  --background-overlay-darker: var(--black-opacity-80);
+  --background-white-overlay: var(--white-opacity-60);
+  --background-white-overlay-darker: var(--white-opacity-80);
+
+  /* Border */
+  --border: var(--neutral-500);
+  --border-light: var(--neutral-300);
+  --border-focus: var(--neutral-800);
+  --border-card: var(--neutral-300);
+  --border-on-colored-bg: var(--neutral-100);
+
+  /* Constant */
+  --constant-black: var(--neutral-800);
+  --constant-white: var(--basic-white);
+
+  /* Status */
+  --status-info: var(--blue-500);
+  --status-success: var(--status-green-600);
+  --status-warning: var(--yellow-400);
+  --status-error: var(--status-red-500);
+  --status-notification: var(--pink-600);
+  --status-text-info: var(--blue-700);
+  --status-text-success: var(--status-green-700);
+  --status-text-warning: var(--yellow-700);
+  --status-text-error: var(--status-red-700);
+  --status-light-bg-info: var(--blue-100);
+  --status-light-bg-success: var(--status-green-100);
+  --status-light-bg-warning: var(--yellow-100);
+  --status-light-bg-error: var(--status-red-100);
+  --status-text-info-on-light-bg: var(--blue-800);
+  --status-text-success-on-light-bg: var(--status-green-700);
+  --status-text-warning-on-light-bg: var(--yellow-800);
+  --status-text-error-on-light-bg: var(--status-red-800);
+
+  /* Decorative */
+  --decorative-pink-light: var(--pink-100);
+  --decorative-pink-medium: var(--pink-200);
+  --decorative-pink: var(--pink-400);
+  --decorative-pink-darker: var(--pink-500);
+  --decorative-purple-light: var(--purple-100);
+  --decorative-purple-medium: var(--purple-200);
+  --decorative-purple: var(--purple-400);
+  --decorative-purple-darker: var(--purple-500);
+  --decorative-blue-light: var(--blue-100);
+  --decorative-blue-medium: var(--blue-200);
+  --decorative-blue: var(--blue-400);
+  --decorative-blue-darker: var(--blue-500);
+  --decorative-yellow-light: var(--yellow-100);
+  --decorative-yellow-medium: var(--yellow-200);
+  --decorative-yellow: var(--yellow-400);
+  --decorative-yellow-darker: var(--yellow-500);
+  --decorative-green-light: var(--green-100);
+  --decorative-green-medium: var(--green-200);
+  --decorative-green: var(--green-400);
+  --decorative-green-darker: var(--green-500);
+  --decorative-ecru-light: var(--ecru-100);
+  --decorative-ecru-medium: var(--ecru-200);
+  --decorative-ecru: var(--ecru-400);
+  --decorative-ecru-darker: var(--ecru-500);
+}
+
+/* ===================== 10.3 Light High Contrast ===================== */
+[data-color-mode='light-hc'] {
+  --text-secondary: var(--neutral-700);
+  --border: var(--neutral-700);
+  --background-hover: var(--neutral-300);
+  --status-text-info: var(--blue-800);
+  --status-text-success: var(--status-green-800);
+  --status-text-warning: var(--yellow-800);
+  --status-text-error: var(--status-red-800);
+  --status-notification: var(--pink-800);
+  --status-text-success-on-light-bg: var(--status-green-800);
+}
+
+/* ===================== 10.4 Dark ===================== */
+[data-color-mode='dark'] {
+  --text-primary: var(--basic-white);
+  --text-secondary: var(--neutral-400);
+  --text-disabled: var(--neutral-600);
+  --text-brand: var(--brand-300);
+  --text-decorative: var(--purple-400);
+  --text-nav-selected: var(--basic-white);
+  --text-on-interactive-disabled: var(--neutral-500);
+
+  --interactive-primary: var(--pink-500);
+  --interactive-primary-hover: var(--pink-600);
+  --interactive-disabled: var(--neutral-700);
+
+  --background-device: var(--basic-black);
+  --background-card: var(--neutral-800);
+  --background-subtle-neutral: var(--neutral-800);
+  --background-medium-neutral: var(--neutral-700);
+  --background-brand: var(--brand-400);
+  --background-hover: var(--neutral-800);
+  --background-decorative-light: var(--purple-800);
+
+  --border-light: var(--neutral-600);
+  --border-focus: var(--neutral-100);
+  --border-card: var(--neutral-800);
+
+  --status-info: var(--blue-400);
+  --status-text-info: var(--blue-400);
+  --status-text-success: var(--status-green-500);
+  --status-text-warning: var(--yellow-400);
+  --status-text-error: var(--status-red-400);
+  --status-light-bg-info: var(--blue-800);
+  --status-light-bg-success: var(--status-green-800);
+  --status-light-bg-warning: var(--yellow-800);
+  --status-light-bg-error: var(--status-red-800);
+  --status-text-info-on-light-bg: var(--blue-100);
+  --status-text-success-on-light-bg: var(--status-green-100);
+  --status-text-warning-on-light-bg: var(--yellow-100);
+  --status-text-error-on-light-bg: var(--status-red-100);
+
+  --decorative-pink-light: var(--pink-200);
+  --decorative-purple-light: var(--purple-200);
+  --decorative-blue-light: var(--blue-200);
+  --decorative-yellow-light: var(--yellow-200);
+  --decorative-green-light: var(--green-200);
+  --decorative-ecru-light: var(--ecru-200);
+}
+
+/* ===================== 10.5 Dark High Contrast ===================== */
+[data-color-mode='dark-hc'] {
+  --text-primary: var(--basic-white);
+  --text-secondary: var(--neutral-300);
+  --text-tertiary: var(--neutral-400);
+  --text-disabled: var(--neutral-600);
+  --text-brand: var(--pink-300);
+  --text-decorative: var(--purple-300);
+  --text-nav-selected: var(--basic-white);
+  --text-on-interactive-primary: var(--basic-black);
+  --text-on-interactive-disabled: var(--neutral-500);
+
+  --interactive-primary: var(--pink-300);
+  --interactive-primary-hover: var(--pink-200);
+  --interactive-disabled: var(--neutral-700);
+
+  --background-device: var(--basic-black);
+  --background-card: var(--neutral-800);
+  --background-subtle-neutral: var(--neutral-800);
+  --background-medium-neutral: var(--neutral-700);
+  --background-brand: var(--brand-400);
+  --background-hover: var(--neutral-800);
+  --background-decorative-light: var(--purple-800);
+
+  --border: var(--neutral-400);
+  --border-light: var(--neutral-600);
+  --border-focus: var(--neutral-100);
+  --border-card: var(--neutral-800);
+
+  --status-info: var(--blue-400);
+  --status-success: var(--status-green-500);
+  --status-notification: var(--pink-300);
+  --status-text-info: var(--blue-300);
+  --status-text-success: var(--status-green-400);
+  --status-text-warning: var(--yellow-300);
+  --status-text-error: var(--status-red-300);
+  --status-light-bg-info: var(--blue-800);
+  --status-light-bg-success: var(--status-green-800);
+  --status-light-bg-warning: var(--yellow-800);
+  --status-light-bg-error: var(--status-red-800);
+  --status-text-info-on-light-bg: var(--blue-100);
+  --status-text-success-on-light-bg: var(--status-green-100);
+  --status-text-warning-on-light-bg: var(--yellow-100);
+  --status-text-error-on-light-bg: var(--status-red-100);
+
+  --decorative-pink-light: var(--pink-200);
+  --decorative-purple-light: var(--purple-200);
+  --decorative-blue-light: var(--blue-200);
+  --decorative-yellow-light: var(--yellow-200);
+  --decorative-green-light: var(--green-200);
+  --decorative-ecru-light: var(--ecru-200);
+}
+
+/* ===================== 10.6 System-Preference Fallback ===================== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-color-mode]) {
+    --text-primary: var(--basic-white);
+    --text-secondary: var(--neutral-400);
+    --text-disabled: var(--neutral-600);
+    --text-brand: var(--brand-300);
+    --text-decorative: var(--purple-400);
+    --text-nav-selected: var(--basic-white);
+    --text-on-interactive-disabled: var(--neutral-500);
+
+    --interactive-primary: var(--pink-500);
+    --interactive-primary-hover: var(--pink-600);
+    --interactive-disabled: var(--neutral-700);
+
+    --background-device: var(--basic-black);
+    --background-card: var(--neutral-800);
+    --background-subtle-neutral: var(--neutral-800);
+    --background-medium-neutral: var(--neutral-700);
+    --background-brand: var(--brand-400);
+    --background-hover: var(--neutral-800);
+    --background-decorative-light: var(--purple-800);
+
+    --border-light: var(--neutral-600);
+    --border-focus: var(--neutral-100);
+    --border-card: var(--neutral-800);
+
+    --status-info: var(--blue-400);
+    --status-text-info: var(--blue-400);
+    --status-text-success: var(--status-green-500);
+    --status-text-warning: var(--yellow-400);
+    --status-text-error: var(--status-red-400);
+    --status-light-bg-info: var(--blue-800);
+    --status-light-bg-success: var(--status-green-800);
+    --status-light-bg-warning: var(--yellow-800);
+    --status-light-bg-error: var(--status-red-800);
+    --status-text-info-on-light-bg: var(--blue-100);
+    --status-text-success-on-light-bg: var(--status-green-100);
+    --status-text-warning-on-light-bg: var(--yellow-100);
+    --status-text-error-on-light-bg: var(--status-red-100);
+
+    --decorative-pink-light: var(--pink-200);
+    --decorative-purple-light: var(--purple-200);
+    --decorative-blue-light: var(--blue-200);
+    --decorative-yellow-light: var(--yellow-200);
+    --decorative-green-light: var(--green-200);
+    --decorative-ecru-light: var(--ecru-200);
+  }
+}
+
+/* ===================== 10.7 Typo-Utilities ===================== */
+.h1 {
+  font: var(--font-weight-light) 32px / 1.25 var(--font-family-base);
+}
+.h2 {
+  font: var(--font-weight-bold) 28px / 1.25 var(--font-family-base);
+}
+.h3 {
+  font: var(--font-weight-light) 24px / 1.25 var(--font-family-base);
+}
+.h4 {
+  font: var(--font-weight-regular) 20px / 1.35 var(--font-family-base);
+}
+.h5 {
+  font: var(--font-weight-bold) 18px / 1.35 var(--font-family-base);
+}
+
+@media (min-width: 768px) {
+  .h1 {
+    font-size: 44px;
+    line-height: 1.2;
+  }
+  .h2 {
+    font-size: 32px;
+  }
+  .h3 {
+    font-size: 28px;
+  }
+  .h4 {
+    font-size: 24px;
+  }
+  .h5 {
+    font-size: 20px;
+  }
+}
+
+.body-l {
+  font: var(--font-weight-regular) 18px / 1.4 var(--font-family-base);
+}
+.body-l-bold {
+  font: var(--font-weight-bold) 18px / 1.4 var(--font-family-base);
+}
+.body-m {
+  font: var(--font-weight-regular) 16px / 1.4 var(--font-family-base);
+}
+.body-m-bold {
+  font: var(--font-weight-bold) 16px / 1.4 var(--font-family-base);
+}
+.body-m-copy {
+  font: var(--font-weight-regular) 16px / 1.5 var(--font-family-base);
+}
+.body-s {
+  font: var(--font-weight-regular) 14px / 1.4 var(--font-family-base);
+}
+.body-s-bold {
+  font: var(--font-weight-bold) 14px / 1.4 var(--font-family-base);
+}
+
+.lead {
+  font: var(--font-weight-light) 20px / 1.4 var(--font-family-base);
+}
+.nav {
+  font: var(--font-weight-light) 32px / 1.4 var(--font-family-base);
+}
+@media (min-width: 768px) {
+  .lead {
+    font-size: 22px;
+  }
+  .nav {
+    font-size: 20px;
+  }
+}
+
+.helper-m {
+  font: var(--font-weight-regular) 12px / 1.4 var(--font-family-base);
+}
+.helper-m-bold {
+  font: var(--font-weight-bold) 12px / 1.4 var(--font-family-base);
+}
+.helper-s {
+  font: var(--font-weight-regular) 10px / 1.4 var(--font-family-base);
+}
+.helper-s-bold {
+  font: var(--font-weight-bold) 10px / 1.4 var(--font-family-base);
+}
+
+.display-l {
+  font: var(--font-weight-light) 72px / 1.2 var(--font-family-base);
+}
+.display-m {
+  font: var(--font-weight-light) 48px / 1.2 var(--font-family-base);
+}
+.display-s {
+  font: var(--font-weight-light) 44px / 1.2 var(--font-family-base);
+}
+
+/* ===================== 10.8 Layout-Container ===================== */
+.container {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
+  padding-inline: var(--layout-margin-mobile);
+}
+@media (min-width: 768px) {
+  .container {
+    padding-inline: var(--layout-margin-tablet);
+  }
+}
+@media (min-width: 1024px) {
+  .container {
+    padding-inline: var(--layout-margin-desktop);
+  }
+}

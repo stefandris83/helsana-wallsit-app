@@ -1,0 +1,43 @@
+@import './design/tokens.css';
+@import './design/components.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--background-device);
+    color: var(--text-primary);
+    font: var(--body-m);
+  }
+
+  /*
+   * Abschnittsueberschriften brauchen mehr Luft zum Inhalt als die Elemente
+   * untereinander. Der Wert ergaenzt den Flex-Gap des Containers um eine Stufe
+   * der Tier-Skala (z. B. space-frog 12px + space-bee 4px = 16px).
+   */
+  h2,
+  h3 {
+    margin-block: 0 var(--space-bee);
+  }
+
+  /* Fokus ist immer sichtbar (design-system.md Kapitel 13). */
+  :focus-visible {
+    outline: var(--border-width-m) solid var(--border-focus);
+    outline-offset: 2px;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+}
