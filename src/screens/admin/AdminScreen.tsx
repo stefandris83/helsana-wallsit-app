@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
@@ -27,7 +27,9 @@ import { logAdminAction } from '../../data/admin-log';
 import { exportEventsCsv, exportSessionsCsv } from '../../data/export';
 import { buildPilotDataset, todayIso } from '../../data/pilot-dataset';
 import type { PilotParticipantRecord } from '../../data/pilot-dataset';
-import { importReportFiles } from '../../data/report-import';
+import { loadReports, signIn } from '../../data/report-store';
+import type { ReportSession } from '../../data/report-store';
+import { isReportSharingConfigured } from '../../app/config';
 import { demoPilotRecords } from '../../demo/demo-data';
 import { PROGRAM_WEEKS } from '../../domain/week-matrix';
 
@@ -79,44 +81,137 @@ export function AdminScreen() {
   const [authenticated, setAuthenticated] = useState(false);
   const [code, setCode] = useState('');
   const [loginError, setLoginError] = useState(false);
+  const [signInError, setSignInError] = useState<string | null>(null);
   const [includeDemo, setIncludeDemo] = useState(false);
   const [filters, setFilters] = useState<DashboardFilters>(defaultFilters);
 
-  /**
-   * Eingelesene Ergebnisberichte. Bewusst nur im Arbeitsspeicher: sie werden
-   * auf dem Geraet der auswertenden Person nicht abgelegt.
-   */
-  const [imported, setImported] = useState<PilotParticipantRecord[]>([]);
-  const [importNotice, setImportNotice] = useState<string[]>([]);
-  const fileInput = useRef<HTMLInputElement>(null);
+  /** Anmeldung an der Berichtsablage. Nur im Arbeitsspeicher, nie persistiert. */
+  const [session, setSession] = useState<ReportSession | null>(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [signingIn, setSigningIn] = useState(false);
 
-  const readReports = async (fileList: FileList | null) => {
-    if (!fileList || fileList.length === 0) return;
-    const outcome = await importReportFiles([...fileList], imported);
-    setImported(outcome.records);
-    const messages = [t('admin.import.done', { count: fileList.length - outcome.rejected.length })];
-    if (outcome.replaced.length > 0) {
-      messages.push(t('admin.import.replaced', { count: outcome.replaced.length }));
+  /**
+   * Geladene Ergebnisberichte. Bewusst nur im Arbeitsspeicher: auf dem Geraet
+   * der auswertenden Person bleibt nichts zurueck.
+   */
+  const [loaded, setLoaded] = useState<PilotParticipantRecord[]>([]);
+  const [loadingReports, setLoadingReports] = useState(false);
+  const [reportNotice, setReportNotice] = useState<string[]>([]);
+  const [reportError, setReportError] = useState<string | null>(null);
+
+  const accountLogin = isReportSharingConfigured();
+
+  const submitSignIn = async () => {
+    setSigningIn(true);
+    setLoginError(false);
+    const result = await signIn(email, password);
+    setSigningIn(false);
+    setPassword('');
+    if (result.status === 'success') {
+      setSession(result.session);
+      setAuthenticated(true);
+      logAdminAction('login_success');
+      logAdminAction('dashboard_viewed');
+      return;
     }
+    setLoginError(true);
+    setSignInError(
+      result.status === 'invalid' ? t('admin.login.accountInvalid') : t('admin.login.accountFailed'),
+    );
+    logAdminAction('login_failed');
+  };
+
+  const fetchReports = async () => {
+    if (!session) return;
+    setLoadingReports(true);
+    setReportError(null);
+    setReportNotice([]);
+    const outcome = await loadReports(session);
+    setLoadingReports(false);
+    if (outcome.status !== 'success') {
+      setReportError(
+        outcome.status === 'unauthorised'
+          ? t('admin.reports.unauthorised')
+          : t('admin.reports.failed'),
+      );
+      return;
+    }
+    setLoaded(outcome.records);
+    const messages =
+      outcome.records.length === 0
+        ? [t('admin.reports.empty')]
+        : [t('admin.reports.loaded', { count: outcome.records.length })];
     if (outcome.rejected.length > 0) {
-      messages.push(t('admin.import.rejected', { count: outcome.rejected.length }));
+      messages.push(t('admin.reports.rejected', { count: outcome.rejected.length }));
     }
-    setImportNotice(messages);
-    logAdminAction('reports_imported');
-    if (fileInput.current) fileInput.current.value = '';
+    setReportNotice(messages);
+    logAdminAction('reports_loaded');
   };
 
   const today = todayIso();
   const records = useMemo(
-    () => buildPilotDataset([...(includeDemo ? demoPilotRecords() : []), ...imported]),
-    [includeDemo, imported],
+    () => buildPilotDataset([...(includeDemo ? demoPilotRecords() : []), ...loaded]),
+    [includeDemo, loaded],
   );
   const metrics = useMemo(
     () => aggregate(records, filters, today, config.minGroupSize),
     [records, filters, today],
   );
 
-  if (!config.adminCode) {
+  /**
+   * Anmeldung mit einem echten Konto, sobald eine Berichtsablage konfiguriert
+   * ist. Die Leseberechtigung haengt an diesem Konto; der ausgelieferte
+   * Schluessel darf weiterhin nur schreiben.
+   */
+  if (accountLogin && !authenticated) {
+    return (
+      <div className="container flex min-h-screen flex-col justify-center gap-cat py-cat">
+        <h1 className="h2">{t('admin.login.title')}</h1>
+        <p className="body-m-copy">{t('admin.login.accountLead')}</p>
+        <form
+          className="flex flex-col gap-rat"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void submitSignIn();
+          }}
+        >
+          <TextField
+            type="email"
+            label={t('admin.login.emailLabel')}
+            value={email}
+            autoComplete="username"
+            onChange={(event) => {
+              setEmail(event.target.value);
+              setSignInError(null);
+            }}
+          />
+          <TextField
+            type="password"
+            label={t('admin.login.passwordLabel')}
+            value={password}
+            autoComplete="current-password"
+            onChange={(event) => {
+              setPassword(event.target.value);
+              setSignInError(null);
+            }}
+            error={signInError ?? undefined}
+          />
+          <Button type="submit" block disabled={signingIn || email === '' || password === ''}>
+            {signingIn ? t('admin.login.pending') : t('admin.login.submit')}
+          </Button>
+        </form>
+        <InlineNotification type="info" iconLabel={t('admin.login.accountNote')}>
+          {t('admin.login.accountNote')}
+        </InlineNotification>
+        <Button variant="secondary" block onClick={() => navigate('/heute')}>
+          {t('admin.backToApp')}
+        </Button>
+      </div>
+    );
+  }
+
+  if (!accountLogin && !config.adminCode) {
     return (
       <div className="container flex min-h-screen flex-col justify-center gap-cat py-cat">
         <h1 className="h2">{t('admin.login.title')}</h1>
@@ -186,51 +281,50 @@ export function AdminScreen() {
         {t('admin.privacyNotice')}
       </InlineNotification>
 
-      <Card>
-        <div className="flex flex-col gap-frog">
-          <h2 className="h5">{t('admin.import.title')}</h2>
-          <p className="body-m-copy">{t('admin.import.text')}</p>
-          <input
-            ref={fileInput}
-            id="admin-import"
-            type="file"
-            accept="application/json,.json"
-            multiple
-            className="u-visually-hidden"
-            onChange={(event) => void readReports(event.target.files)}
-          />
-          <Button
-            variant="secondary"
-            block
-            iconLeft="upload"
-            onClick={() => fileInput.current?.click()}
-          >
-            {t('admin.import.action')}
-          </Button>
-          {importNotice.length > 0 ? (
-            <InlineNotification type="success" iconLabel={importNotice[0]}>
-              {importNotice.join(' ')}
-            </InlineNotification>
-          ) : null}
-          {imported.length > 0 ? (
-            <>
-              <p className="body-m">{t('admin.import.count', { count: imported.length })}</p>
-              <Button
-                variant="secondary"
-                block
-                onClick={() => {
-                  setImported([]);
-                  setImportNotice([]);
-                  logAdminAction('reports_cleared');
-                }}
-              >
-                {t('admin.import.clear')}
-              </Button>
-            </>
-          ) : null}
-          <p className="helper-m text-secondary">{t('admin.import.retention')}</p>
-        </div>
-      </Card>
+      {session ? (
+        <Card>
+          <div className="flex flex-col gap-frog">
+            <h2 className="h5">{t('admin.reports.title')}</h2>
+            <p className="body-m-copy">{t('admin.reports.text')}</p>
+            {reportError ? (
+              <InlineNotification type="error" iconLabel={reportError}>
+                {reportError}
+              </InlineNotification>
+            ) : null}
+            <Button
+              variant="secondary"
+              block
+              iconLeft="download"
+              disabled={loadingReports}
+              onClick={() => void fetchReports()}
+            >
+              {loadingReports ? t('admin.reports.loading') : t('admin.reports.load')}
+            </Button>
+            {reportNotice.length > 0 ? (
+              <InlineNotification type="success" iconLabel={reportNotice[0]}>
+                {reportNotice.join(' ')}
+              </InlineNotification>
+            ) : null}
+            {loaded.length > 0 ? (
+              <>
+                <p className="body-m">{t('admin.reports.count', { count: loaded.length })}</p>
+                <Button
+                  variant="secondary"
+                  block
+                  onClick={() => {
+                    setLoaded([]);
+                    setReportNotice([]);
+                    logAdminAction('reports_cleared');
+                  }}
+                >
+                  {t('admin.reports.clear')}
+                </Button>
+              </>
+            ) : null}
+            <p className="helper-m text-secondary">{t('admin.reports.retention')}</p>
+          </div>
+        </Card>
+      ) : null}
 
       <Card>
         <div className="flex flex-col gap-frog">

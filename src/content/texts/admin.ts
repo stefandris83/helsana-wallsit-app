@@ -9,6 +9,26 @@ export const adminContent = defineContent({
   'admin.login.codeLabel': { owner: 'product', text: 'Zugangscode' },
   'admin.login.submit': { owner: 'product', text: 'Anmelden' },
   'admin.login.invalid': { owner: 'product', text: 'Der Code ist nicht korrekt.' },
+
+  'admin.login.accountLead': {
+    owner: 'product',
+    text: 'Bitte melden Sie sich mit Ihrem Projektkonto an.',
+  },
+  'admin.login.emailLabel': { owner: 'product', text: 'E-Mail-Adresse' },
+  'admin.login.passwordLabel': { owner: 'product', text: 'Passwort' },
+  'admin.login.pending': { owner: 'product', text: 'Anmeldung läuft …' },
+  'admin.login.accountInvalid': {
+    owner: 'product',
+    text: 'Anmeldung nicht möglich. Bitte prüfen Sie E-Mail-Adresse und Passwort.',
+  },
+  'admin.login.accountFailed': {
+    owner: 'product',
+    text: 'Die Anmeldung ist fehlgeschlagen. Besteht eine Netzverbindung?',
+  },
+  'admin.login.accountNote': {
+    owner: 'privacy',
+    text: 'Die Anmeldung gilt nur für diese Sitzung und wird auf diesem Gerät nicht gespeichert.',
+  },
   'admin.login.notConfigured': {
     owner: 'engineering',
     text: 'Es ist kein Zugangscode konfiguriert. Setzen Sie VITE_ADMIN_CODE in der Umgebung.',
@@ -88,24 +108,36 @@ export const adminContent = defineContent({
   'admin.filter.to': { owner: 'product', text: 'Bis' },
   'admin.filter.reset': { owner: 'product', text: 'Filter zurücksetzen' },
 
-  'admin.import.title': { owner: 'privacy', text: 'Geteilte Ergebnisberichte einlesen' },
-  'admin.import.text': {
+  'admin.reports.title': { owner: 'privacy', text: 'Geteilte Ergebnisberichte' },
+  'admin.reports.text': {
     owner: 'privacy',
-    text: 'Berichte, die Teilnehmende freiwillig geteilt haben, als JSON-Dateien auswählen. Mehrfachauswahl ist möglich. Teilt eine Pilotnummer mehrere Berichte, zählt der zuletzt eingelesene.',
+    text: 'Berichte, die Teilnehmende freiwillig geteilt haben, direkt aus der Ablage laden. Teilt eine Pilotnummer mehrere Berichte, zählt der zuletzt geteilte.',
   },
-  'admin.import.action': { owner: 'privacy', text: 'Berichte auswählen' },
-  'admin.import.retention': {
+  'admin.reports.load': { owner: 'privacy', text: 'Berichte laden' },
+  'admin.reports.loading': { owner: 'privacy', text: 'Berichte werden geladen …' },
+  'admin.reports.loaded': { owner: 'privacy', text: '{count} Bericht(e) geladen.' },
+  'admin.reports.empty': {
     owner: 'privacy',
-    text: 'Eingelesene Berichte bleiben nur für diese Sitzung im Arbeitsspeicher und werden auf diesem Gerät nicht gespeichert.',
+    text: 'Es liegen noch keine geteilten Berichte vor.',
   },
-  'admin.import.done': { owner: 'privacy', text: '{count} Bericht(e) eingelesen.' },
-  'admin.import.replaced': { owner: 'privacy', text: 'Davon {count} als neuere Fassung ersetzt.' },
-  'admin.import.rejected': {
+  'admin.reports.failed': {
+    owner: 'privacy',
+    text: 'Die Berichte konnten nicht geladen werden. Bitte versuchen Sie es erneut.',
+  },
+  'admin.reports.unauthorised': {
+    owner: 'privacy',
+    text: 'Dieses Konto hat kein Leserecht für die Berichte.',
+  },
+  'admin.reports.rejected': {
     owner: 'privacy',
     text: '{count} Datei(en) konnten nicht gelesen werden und wurden übersprungen.',
   },
-  'admin.import.clear': { owner: 'privacy', text: 'Eingelesene Berichte verwerfen' },
-  'admin.import.count': { owner: 'privacy', text: 'Eingelesen: {count}' },
+  'admin.reports.retention': {
+    owner: 'privacy',
+    text: 'Geladene Berichte bleiben nur für diese Sitzung im Arbeitsspeicher und werden auf diesem Gerät nicht gespeichert.',
+  },
+  'admin.reports.clear': { owner: 'privacy', text: 'Geladene Berichte verwerfen' },
+  'admin.reports.count': { owner: 'privacy', text: 'Geladen: {count}' },
 
   'admin.export.title': { owner: 'privacy', text: 'CSV-Export anonymisierter Nutzungsdaten' },
   'admin.export.text': {

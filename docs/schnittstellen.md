@@ -27,7 +27,7 @@ von dem, was **erst beim Betrieb** greift (spec.md §30).
 |---|---|
 | Verschluesselte Datenuebertragung | Erst relevant mit serverseitiger Ablage. Vorgesehen: TLS gegen einen Helsana-Endpunkt, konfiguriert ueber `RemoteStorageAdapterStub` (`src/data/storage-adapter.ts`). |
 | Sichere Speicherung | Serverseitige Verschluesselung im Ruhezustand. Im MVP liegen die Daten unverschluesselt im Browser-Speicher des Geraets — das ist im Datenschutzhinweis zu benennen. |
-| Rollen- und Rechtekonzept | Der Admin-Codeschutz ist ein Platzhalter. Produktiv vorgesehen: Anbindung an das Helsana-Identitaetsmanagement mit Rollen «Auswertung lesen» und «Export erstellen». Konfigurationspunkt: `VITE_ADMIN_CODE` entfaellt und wird durch einen Auth-Provider ersetzt. |
+| Rollen- und Rechtekonzept | Teilweise umgesetzt: bei konfigurierter Berichtsablage meldet sich das Dashboard mit einem echten Konto an, und das Leserecht haengt an `public.report_readers` (Abschnitt 5). Ohne Ablage bleibt der Codeschutz ueber `VITE_ADMIN_CODE` als Platzhalter. Produktiv vorgesehen: Anbindung an das Helsana-Identitaetsmanagement mit Rollen «Auswertung lesen» und «Export erstellen». |
 | Aufbewahrungskonzept | Serverseitige Loeschfristen je Datenkategorie. Im MVP nicht abbildbar, da keine zentrale Ablage existiert. |
 | Codeverwaltung | `src/data/access-codes.ts` wird durch einen serverseitig verwalteten Bestand ersetzt; die Zuordnung Code zu Pilot-ID erfolgt dann ausserhalb des Clients. |
 | Erinnerungen | Kein Push-Backend und kein Service Worker (B.13.2). Produktiv waere ein Push-Dienst mit eigener Einwilligung noetig. |
@@ -70,8 +70,10 @@ Zuerich (`eu-central-2`).
 | Punkt | Umsetzung |
 |---|---|
 | Transport | HTTPS gegen die Storage-Schnittstelle, kein SDK, kein zusaetzliches Paket |
-| Berechtigung | genau eine Regel auf `storage.objects`: `insert` fuer `anon` im Ordner `berichte` |
-| Lesen und Loeschen | fuer den ausgelieferten Schluessel gesperrt, geprueft am 03.08.2026 |
+| Berechtigung Schreiben | `berichte_anon_insert`: `insert` fuer `anon` im Ordner `berichte` |
+| Berechtigung Lesen | `berichte_reader_select`: `select` fuer angemeldete Konten, deren Adresse in `public.report_readers` steht |
+| Lesen und Loeschen mit dem ausgelieferten Schluessel | gesperrt, geprueft am 03.08.2026 |
+| Anmeldung des Dashboards | E-Mail und Passwort gegen `/auth/v1/token`; Token nur im Arbeitsspeicher, kein Refresh, keine Persistenz |
 | Dateiname | `<Pilotnummer>-<Zeitstempel>.json`, kein Ueberschreiben moeglich |
 | Groesse und Typ | auf 2 MB und `application/json` begrenzt |
 | Konfiguration | `VITE_REPORT_UPLOAD_URL`, `VITE_REPORT_UPLOAD_KEY`, `VITE_REPORT_UPLOAD_BUCKET` |

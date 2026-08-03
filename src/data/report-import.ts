@@ -1,10 +1,8 @@
 /**
- * Einlesen freiwillig geteilter Ergebnisberichte im Pilot-Dashboard.
+ * Pruefung geteilter Ergebnisberichte, bevor sie ins Pilot-Dashboard gelangen.
  *
- * Berichte werden ausschliesslich fuer die Dauer der Sitzung im Arbeitsspeicher
- * gehalten und nicht auf dem Geraet der auswertenden Person gespeichert. Beim
- * Einlesen wird der Bericht auf die im Dashboard zulaessigen Felder reduziert:
- * ein manipulierter oder aelterer Bericht kann keine Profilangaben, keine
+ * Der Bericht wird auf die im Dashboard zulaessigen Felder reduziert: ein
+ * manipulierter oder aelterer Bericht kann keine Profilangaben, keine
  * Blutdruckwerte und keine Freitexte in die Auswertung tragen.
  */
 
@@ -13,14 +11,6 @@ import { createEmptyParticipant } from './participant';
 import type { ParticipantData } from './participant';
 import type { PilotParticipantRecord } from './pilot-dataset';
 import { REPORT_SCHEMA } from './report-sharing';
-
-export interface ImportOutcome {
-  records: PilotParticipantRecord[];
-  /** Dateinamen, die nicht gelesen werden konnten. */
-  rejected: string[];
-  /** Dateinamen, deren Pilot-ID bereits vorhanden war und die ersetzt wurden. */
-  replaced: string[];
-}
 
 function isRecordObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -61,35 +51,4 @@ export function parseSharedReport(raw: unknown): PilotParticipantRecord | null {
     events,
     demo: raw.demo === true,
   };
-}
-
-/**
- * Liest mehrere Dateien ein und fuehrt sie mit den bereits eingelesenen
- * Berichten zusammen. Ein neuerer Bericht derselben Pilot-ID ersetzt den
- * aelteren, damit mehrfaches Teilen keine Person doppelt zaehlt.
- */
-export async function importReportFiles(
-  files: readonly File[],
-  existing: readonly PilotParticipantRecord[] = [],
-): Promise<ImportOutcome> {
-  const byPilotId = new Map(existing.map((record) => [record.pilotId, record]));
-  const rejected: string[] = [];
-  const replaced: string[] = [];
-
-  for (const file of files) {
-    let parsed: PilotParticipantRecord | null = null;
-    try {
-      parsed = parseSharedReport(JSON.parse(await file.text()));
-    } catch {
-      parsed = null;
-    }
-    if (!parsed) {
-      rejected.push(file.name);
-      continue;
-    }
-    if (byPilotId.has(parsed.pilotId)) replaced.push(file.name);
-    byPilotId.set(parsed.pilotId, parsed);
-  }
-
-  return { records: [...byPilotId.values()], rejected, replaced };
 }

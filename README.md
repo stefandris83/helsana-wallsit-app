@@ -85,12 +85,12 @@ fuer einen Pilot mit echten Teilnehmerdaten:
 - Das Repository ist oeffentlich und enthaelt neben dem Code auch `spec.md`, `design-system.md`
   und `CLAUDE.md` sowie das Helsana-Logo (Herkunft siehe «Design System «Unify»»).
 
-## Ergebnisberichte teilen und einlesen
+## Ergebnisberichte teilen und auswerten
 
 Teilnehmende koennen ihren Trainingsverlauf freiwillig fuer die Pilotauswertung uebermitteln:
 **Einstellungen → Daten → «Ergebnisbericht teilen»**. Der Bericht landet als JSON-Datei in einem
-privaten Ablageordner; die auswertende Person laedt die Dateien dort herunter und liest sie im
-Dashboard unter «Geteilte Ergebnisberichte einlesen» ein.
+privaten Ablageordner. Im Dashboard meldet sich die auswertende Person mit ihrem Projektkonto an
+und laedt die Berichte unter «Geteilte Ergebnisberichte» direkt aus der Ablage.
 
 Der Weg ist bewusst manuell und einmalig pro Knopfdruck. Es gibt **keine** Hintergrund-
 synchronisation: ohne aktives Zutun der Person verlaesst kein Datum das Geraet.
@@ -120,8 +120,14 @@ Auswertung tragen.
 ### Zugriffsschutz des Ablageordners
 
 Der Ordner liegt bei Supabase (Projekt `wallsit-pilot`, Region Zuerich). Auf `storage.objects`
-existiert **genau eine** Regel: `insert` fuer die Rolle `anon` im Ordner `berichte`. Kein `select`,
-kein `update`, kein `delete`. Der oeffentliche Schluessel im ausgelieferten JavaScript kann damit
+existieren genau zwei Regeln:
+
+| Regel | Rolle | Wirkung |
+|---|---|---|
+| `berichte_anon_insert` | `anon` | hochladen — das ist der ausgelieferte Schluessel |
+| `berichte_reader_select` | `authenticated` | lesen, aber nur fuer Adressen in `public.report_readers` |
+
+Kein `update`, kein `delete`. Der oeffentliche Schluessel im ausgelieferten JavaScript kann damit
 ausschliesslich hochladen. Geprueft am 03.08.2026 gegen die laufende Instanz:
 
 | Aktion mit dem oeffentlichen Schluessel | Ergebnis |
@@ -132,7 +138,30 @@ ausschliesslich hochladen. Geprueft am 03.08.2026 gegen die laufende Instanz:
 | Datei loeschen | 400 |
 
 Deshalb ist dieser Schluessel kein Secret und darf im Repository stehen (B.12 bleibt gewahrt).
-Zum Abholen der Dateien braucht es den Projektzugang bei Supabase.
+
+Das Leserecht haengt bewusst an der E-Mail-Adresse des angemeldeten Kontos, nicht daran, dass
+ueberhaupt jemand angemeldet ist: selbst wenn im Projekt die Registrierung offen stehen sollte,
+kann ein fremdes Konto die Berichte nicht lesen. Berechtigte Adressen stehen in
+`public.report_readers`; die Tabelle hat bewusst keine Leseregel und ist damit nur serverseitig
+einsehbar.
+
+### Anmeldung am Dashboard
+
+Ist eine Berichtsablage konfiguriert, ersetzt eine echte Anmeldung mit E-Mail und Passwort den
+Platzhalter-Zugangscode. Das Konto wird in der Supabase-Oberflaeche unter *Authentication → Users*
+angelegt; die Adresse muss zusaetzlich in `public.report_readers` stehen:
+
+```sql
+insert into public.report_readers (email, note) values ('adresse@example.ch', 'Pilotauswertung');
+```
+
+Das Zugangstoken bleibt im Arbeitsspeicher und wird nicht gespeichert — nach einem Reload ist eine
+neue Anmeldung noetig. Ohne konfigurierte Ablage faellt das Dashboard auf den Codeschutz ueber
+`VITE_ADMIN_CODE` zurueck; der bleibt ein Platzhalter und kein produktiver
+Authentisierungsmechanismus.
+
+Empfohlen: in der Supabase-Oberflaeche unter *Authentication → Sign In / Providers* die
+Selbstregistrierung abschalten, damit ueberhaupt nur angelegte Konten existieren koennen.
 
 ### Grenzen
 
@@ -141,8 +170,8 @@ Zum Abholen der Dateien braucht es den Projektzugang bei Supabase.
 - **Die Codeverteilung entscheidet.** Wer festhaelt, welche Person welchen Einladungscode erhalten
   hat, kann jeden Bericht zuordnen. Fuer echte Pseudonymitaet die Codes selbst waehlen lassen und
   die Zuordnung nicht protokollieren.
-- **Eingelesene Berichte werden nicht gespeichert.** Sie bleiben nur fuer die Sitzung im
-  Arbeitsspeicher des Dashboards und sind nach einem Reload erneut einzulesen. Das ist Absicht:
+- **Geladene Berichte werden nicht gespeichert.** Sie bleiben nur fuer die Sitzung im
+  Arbeitsspeicher des Dashboards und sind nach einem Reload erneut zu laden. Das ist Absicht:
   auf dem Geraet der auswertenden Person entsteht keine Datensammlung.
 - **Abweichung von CLAUDE.md B.4.** Die Vorgabe «im MVP verlassen keine Daten das Geraet» ist mit
   dieser Funktion nicht mehr uneingeschraenkt erfuellt. Der Auftraggeber hat sie am 03.08.2026
