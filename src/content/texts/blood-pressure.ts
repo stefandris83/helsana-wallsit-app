@@ -5,7 +5,7 @@ export const bloodPressureContent = defineContent({
   'bp.title': { owner: 'product', text: 'Blutdruck' },
   'bp.lead': {
     owner: 'medical',
-    text: 'Ein freiwilliges Tagebuch für selbst gemessene Zahlen. Die App misst nichts und nimmt keine Auswertung vor.',
+    text: 'Ein freiwilliges Tagebuch für selbst gemessene Zahlen. Die App misst nichts und bewertet Ihre Zahlen nicht.',
   },
   'bp.separationNote': {
     owner: 'medical',
@@ -19,17 +19,34 @@ export const bloodPressureContent = defineContent({
   'bp.consent.title': { owner: 'privacy', text: 'Zusätzliche Einwilligung' },
   'bp.consent.text': {
     owner: 'privacy',
-    text: 'Das Blutdrucktagebuch ist freiwillig und benötigt eine eigene Einwilligung. Ihre Einträge bleiben auf diesem Gerät. In der Pilotauswertung erscheint ausschliesslich die Anzahl Ihrer Einträge, niemals die Zahlen selbst.',
+    text: 'Das Blutdrucktagebuch ist freiwillig und benötigt eine eigene Einwilligung. Für die Pilotauswertung werden Ihre Einträge an Helsana übermittelt: Datum, Uhrzeit und die Zahlen, verbunden mit Ihrer Pilotnummer. Ihre Notizen bleiben auf diesem Gerät und werden nicht übermittelt. Sie können das Tagebuch jederzeit deaktivieren; danach werden keine Werte mehr übermittelt.',
   },
   'bp.consent.checkbox': {
     owner: 'privacy',
-    text: 'Ich möchte das freiwillige Blutdrucktagebuch nutzen.',
+    text: 'Ich möchte das freiwillige Blutdrucktagebuch nutzen und bin mit der Übermittlung meiner Einträge für die Pilotauswertung einverstanden.',
   },
   'bp.consent.activate': { owner: 'privacy', text: 'Tagebuch aktivieren' },
   'bp.consent.revoke': { owner: 'privacy', text: 'Tagebuch deaktivieren' },
   'bp.consent.revokeHint': {
     owner: 'privacy',
     text: 'Beim Deaktivieren bleiben bereits erfasste Einträge bestehen. Sie können sie einzeln oder gesammelt löschen.',
+  },
+
+  'bp.chart.title': { owner: 'medical', text: 'Ihre Werte im Zeitverlauf' },
+  'bp.chart.lead': {
+    owner: 'medical',
+    text: 'Die Grafik zeigt die Zahlen, die Sie eingetragen haben, ohne weitere Einordnung.',
+  },
+  'bp.chart.systolic': { owner: 'medical', text: 'Systolisch' },
+  'bp.chart.diastolic': { owner: 'medical', text: 'Diastolisch' },
+  'bp.chart.columnDate': { owner: 'product', text: 'Datum' },
+  'bp.chart.alt': {
+    owner: 'medical',
+    text: 'Verlauf von {count} Blutdruckeinträgen, systolisch und diastolisch in mmHg',
+  },
+  'bp.chart.tooFew': {
+    owner: 'product',
+    text: 'Ab zwei Einträgen sehen Sie hier den Verlauf Ihrer Werte.',
   },
 
   'bp.list.title': { owner: 'product', text: 'Ihre Einträge' },

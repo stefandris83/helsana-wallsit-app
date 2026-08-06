@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ActionLink } from '../../components/ActionLink';
+import { BpChart } from '../../components/BpChart';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { Checkbox } from '../../components/Choice';
@@ -85,6 +86,14 @@ export function BloodPressureScreen() {
       <Button block iconLeft="add" onClick={() => navigate('/blutdruck/neu')}>
         {t('bp.list.add')}
       </Button>
+
+      <Card>
+        <div className="flex flex-col gap-frog">
+          <h2 className="h5">{t('bp.chart.title')}</h2>
+          <p className="body-m-copy">{t('bp.chart.lead')}</p>
+          <BpChart entries={entries} />
+        </div>
+      </Card>
 
       <Card>
         <div className="flex flex-col gap-frog">

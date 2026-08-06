@@ -5,12 +5,13 @@
  * ausdruecklichen Knopfdruck erzeugt und hochgeladen. Es gibt keine
  * Hintergrundsynchronisation und keinen automatischen Abgleich.
  *
- * Der Bericht enthaelt genau die Daten, die im Pilot-Dashboard ohnehin
- * ausgewertet werden duerfen (§26):
+ * Der Bericht enthaelt genau die Daten, die im Pilot-Dashboard ausgewertet
+ * werden duerfen (§26):
  *   - keine Identitaetsdaten (Zugangscode, Kontaktangabe) — im Datentyp
  *     `PilotParticipantRecord` gar nicht vorhanden (B.4),
- *   - keine einzelnen Blutdruckwerte, nur deren Anzahl (B.13.6),
- *   - keine Freitextnotizen — Notizen existieren nur am Blutdruckeintrag,
+ *   - Blutdruckwerte ja, Freitextnotizen nein: die Werte sind seit dem
+ *     06.08.2026 fuer den Pilot freigegeben, Notizen bleiben auf dem Geraet,
+ *     weil sie identifizierende Angaben enthalten koennen,
  *   - kein Profil: Groesse, Gewicht, Geburtsjahr und Geschlecht werden fuer
  *     die Auswertung nicht benoetigt und deshalb vor dem Versand entfernt.
  *
@@ -20,24 +21,35 @@
  */
 
 import { config, isReportSharingConfigured } from '../app/config';
+import type { BpEntry } from '../domain/types';
 import type { AppEvent } from './events';
 import type { ParticipantData } from './participant';
 import type { PilotParticipantRecord } from './pilot-dataset';
 
-export const REPORT_SCHEMA = 'wandsitz-pilot-bericht/v1';
+export const REPORT_SCHEMA = 'wandsitz-pilot-bericht/v2';
 
 /** Nutzungsdaten des Berichts: `ParticipantData` ohne Profilangaben. */
 export type SharedParticipantData = Omit<ParticipantData, 'profile'> & { profile: null };
+
+/** Blutdruckeintrag ohne Freitextnotiz. */
+export type SharedBpEntry = Omit<BpEntry, 'note'> & { note: null };
 
 export interface SharedReport {
   schema: typeof REPORT_SCHEMA;
   createdAt: string;
   pilotId: string;
-  /** Nur die Anzahl der Blutdruckeintraege, niemals die Zahlen. */
   bpEntryCount: number;
+  /** Blutdruckwerte ohne Notizen (freigegeben 06.08.2026). */
+  bpEntries: SharedBpEntry[];
   demo: boolean;
   participant: SharedParticipantData;
   events: AppEvent[];
+}
+
+/** Entfernt die Freitextnotiz aus einem Blutdruckeintrag. */
+function withoutNote(entry: BpEntry): SharedBpEntry {
+  const { note: _note, ...rest } = entry;
+  return { ...rest, note: null };
 }
 
 /** Baut den Bericht aus dem lokalen Auswertungsdatensatz. */
@@ -51,6 +63,7 @@ export function buildSharedReport(
     createdAt: now.toISOString(),
     pilotId: record.pilotId,
     bpEntryCount: record.bpEntryCount,
+    bpEntries: record.bpEntries.map(withoutNote),
     demo: record.demo,
     participant: { ...rest, profile: null },
     events: [...record.events],

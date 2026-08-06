@@ -95,7 +95,12 @@ describe('Anmeldung an der Berichtsablage', () => {
 });
 
 describe('Berichte laden', () => {
-  it('fuehrt mehrere Berichte zu einem Datensatz je Pilotnummer zusammen', async () => {
+  /**
+   * Bei automatischer Uebermittlung entstehen je Person viele Dateien. Geladen
+   * wird nur die jeweils neuste — sonst waechst der Ladevorgang mit der
+   * Laufzeit des Piloten.
+   */
+  it('laedt je Pilotnummer nur die zuletzt uebermittelte Datei', async () => {
     fetchMock
       .mockResolvedValueOnce(
         jsonResponse([
@@ -104,7 +109,6 @@ describe('Berichte laden', () => {
           { name: 'P-002-2026-08-02.json' },
         ]),
       )
-      .mockResolvedValueOnce(jsonResponse(report('P-001', 1)))
       .mockResolvedValueOnce(jsonResponse(report('P-001', 5)))
       .mockResolvedValueOnce(jsonResponse(report('P-002', 2)));
 
@@ -113,9 +117,14 @@ describe('Berichte laden', () => {
     expect(outcome.status).toBe('success');
     if (outcome.status !== 'success') return;
     expect(outcome.records).toHaveLength(2);
-    // Der zuletzt abgelegte Bericht derselben Pilotnummer gewinnt.
-    const first = outcome.records.find((record) => record.pilotId === 'P-001');
-    expect(first?.participant.sessions).toHaveLength(5);
+    expect(outcome.records.find((record) => record.pilotId === 'P-001')?.participant.sessions)
+      .toHaveLength(5);
+
+    // Auflistung plus genau zwei Downloads, nicht drei.
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    const downloaded = fetchMock.mock.calls.slice(1).map(([url]) => String(url));
+    expect(downloaded.some((url) => url.includes('P-001-2026-08-03'))).toBe(true);
+    expect(downloaded.some((url) => url.includes('P-001-2026-08-01'))).toBe(false);
   });
 
   it('meldet fehlendes Leserecht getrennt von einem Fehler', async () => {

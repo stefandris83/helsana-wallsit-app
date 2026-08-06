@@ -1,7 +1,8 @@
 import { toIsoDate } from '../domain/dates';
 import { daysBetween } from '../domain/dates';
 import type { IsoDate } from '../domain/types';
-import { countBpEntries } from './bp-repository';
+import { countBpEntries, listBpEntries } from './bp-repository';
+import type { BpEntry } from '../domain/types';
 import { loadEvents } from './event-log';
 import type { AppEvent } from './events';
 import type { ParticipantData } from './participant';
@@ -18,8 +19,18 @@ import { STORAGE_KEYS, getStorageAdapter } from './storage-adapter';
 export interface PilotParticipantRecord {
   pilotId: string;
   participant: ParticipantData;
-  /** Nur die Anzahl der Blutdruckeintraege, niemals die Zahlen (B.13.6). */
+  /** Anzahl der Blutdruckeintraege. Grundlage der aggregierten Kennzahl. */
   bpEntryCount: number;
+  /**
+   * Blutdruckeintraege ohne Freitextnotiz.
+   *
+   * Freigegeben durch den Auftraggeber am 06.08.2026 fuer den Pilot: die Werte
+   * duerfen uebermittelt und dargestellt werden (Abweichung von B.13.6 und
+   * B.11.9, dokumentiert in der README). Die Grenze aus §3 bleibt bestehen —
+   * keine Bewertung, keine Kategorien, keine Zielbereiche, keine Verknuepfung
+   * mit dem Training.
+   */
+  bpEntries: BpEntry[];
   events: AppEvent[];
   demo: boolean;
 }
@@ -44,6 +55,9 @@ export function localRecord(): PilotParticipantRecord | null {
     pilotId: identity.pilotId,
     participant,
     bpEntryCount: countBpEntries(),
+    // Ohne Freitextnotiz: der Auswertungsdatensatz fuehrt grundsaetzlich keine
+    // Freitexte, damit sie weder im Dashboard noch im Bericht auftauchen koennen.
+    bpEntries: listBpEntries().map((entry) => ({ ...entry, note: null })),
     events: loadEvents(),
     demo: participant.demoLoaded,
   };

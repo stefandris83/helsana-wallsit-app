@@ -14,7 +14,7 @@ von dem, was **erst beim Betrieb** greift (spec.md §30).
 | Protokollierung administrativer Zugriffe | `src/data/admin-log.ts`: Zeitpunkt und Aktion, kein Personenbezug, begrenzt auf 200 Eintraege. |
 | Loeschkonzept | `deleteAllData()` entfernt Identitaet, Nutzungsdaten, Ereignis-Log, Blutdruckdaten, Timerzustand und Admin-Log. Zusaetzlich selektives Loeschen der Blutdruckeintraege. |
 | Schutz vor unberechtigtem Export | Der Rohdatenexport ist auf die eigene Person begrenzt; der Pilotexport enthaelt keine Werte. Ein Export medizinisch sensibler Rohdaten ist bewusst nicht implementiert. |
-| Freiwillige Uebermittlung | `src/data/report-sharing.ts`: nur auf Knopfdruck, keine Hintergrundsynchronisation. Der Bericht entsteht aus `PilotParticipantRecord` und wird zusaetzlich um die Profilangaben reduziert. Gegenprobe beim Einlesen in `src/data/report-import.ts`. |
+| Automatische Uebermittlung | `src/data/auto-sync.ts`: ein Einhaengepunkt am Store, Entprellung, Nachholen nach Fehlschlag. Der Bericht entsteht aus `PilotParticipantRecord`, wird um Profilangaben und Freitextnotizen reduziert; Blutdruckwerte nur bei erteilter Einwilligung. Gegenprobe beim Einlesen in `src/data/report-import.ts`. |
 | Keine Drittanbieter-Tracker | Keine Analytics-Bibliothek, keine externen CDN, keine Schriftdateien von Dritten. |
 | Keine Weitergabe an generative KI-Dienste | Keine KI-Abhaengigkeit im Projekt. |
 | Keine echten Kundendaten | Demodaten sind synthetisch und als solche gekennzeichnet (`src/demo/demo-data.ts`). |
@@ -74,7 +74,10 @@ Zuerich (`eu-central-2`).
 | Berechtigung Lesen | `berichte_reader_select`: `select` fuer angemeldete Konten, deren Adresse in `public.report_readers` steht. Die Pruefung laeuft ueber `public.is_report_reader()` mit definierenden Rechten, damit die Erlaubnisliste selbst fuer Clients unlesbar bleibt. |
 | Lesen und Loeschen mit dem ausgelieferten Schluessel | gesperrt, geprueft am 03.08.2026 |
 | Anmeldung des Dashboards | E-Mail und Passwort gegen `/auth/v1/token`; Token nur im Arbeitsspeicher, kein Refresh, keine Persistenz |
+| Ausloeser | jede Aenderung am Nutzungsdatenstand, entprellt um fuenf Sekunden; offene Uebermittlungen werden beim Start nachgeholt |
 | Dateiname | `<Pilotnummer>-<Zeitstempel>.json`, kein Ueberschreiben moeglich |
+| Lesen im Dashboard | je Pilotnummer wird nur die zuletzt abgelegte Datei geladen, nicht der gesamte Bestand |
+| Loeschung auf Verlangen | von Hand in der Supabase-Oberflaeche; die App hat kein Loeschrecht |
 | Groesse und Typ | auf 2 MB und `application/json` begrenzt |
 | Konfiguration | `VITE_REPORT_UPLOAD_URL`, `VITE_REPORT_UPLOAD_KEY`, `VITE_REPORT_UPLOAD_BUCKET` |
 | Abschaltung | fehlt einer der ersten beiden Werte, blendet die App die Funktion aus |

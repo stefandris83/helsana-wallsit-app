@@ -240,6 +240,39 @@ function buildDemoBpEntries(): BpEntry[] {
   });
 }
 
+/**
+ * Synthetische Messreihe fuer einen Dashboard-Datensatz.
+ *
+ * Die Zahlen schwanken um einen erfundenen Ausgangswert und folgen bewusst
+ * keinem Verlauf, der eine Wirkung des Trainings nahelegen wuerde (§3, Verbot
+ * 11). Sie dienen ausschliesslich dazu, die Grafik bei einer Vorfuehrung mit
+ * Inhalt zu fuellen.
+ */
+function buildRecordBpEntries(pilotId: string, count: number, startDate: IsoDate): BpEntry[] {
+  const seed = Number.parseInt(pilotId.replace(/\D/g, ''), 10) || 0;
+  const baseSystolic = 124 + (seed % 5) * 3;
+  const baseDiastolic = 78 + (seed % 4) * 2;
+
+  return Array.from({ length: count }, (_, index) => {
+    const wobble = [0, 4, -3, 6, -2, 3, -5, 1][index % 8];
+    const date = addDays(startDate, index * 4 + 2);
+    const morning = index % 2 === 0;
+    return {
+      id: `demo_bp_${pilotId}_${index}`,
+      date,
+      time: morning ? '07:15' : '20:30',
+      systolic: baseSystolic + wobble,
+      diastolic: baseDiastolic + Math.round(wobble / 2),
+      pulse: 64 + ((index * 3) % 11),
+      note: null,
+      daypart: morning ? 'morning' : 'evening',
+      createdAt: `${date}T07:20:00.000Z`,
+      updatedAt: `${date}T07:20:00.000Z`,
+      demo: true,
+    } satisfies BpEntry;
+  });
+}
+
 function buildDemoEvents(participant: ParticipantData): AppEvent[] {
   const events: AppEvent[] = [];
   let counter = 0;
@@ -579,6 +612,7 @@ function buildRecord(spec: DemoRecordSpec): PilotParticipantRecord {
     pilotId: spec.pilotId,
     participant,
     bpEntryCount: spec.bpEntryCount,
+    bpEntries: buildRecordBpEntries(spec.pilotId, spec.bpEntryCount, plan.startDate),
     events: buildDemoEvents(participant),
     demo: true,
   };

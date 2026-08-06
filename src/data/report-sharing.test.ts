@@ -97,7 +97,7 @@ function seedLocalState(): ParticipantData {
 }
 
 describe('Ergebnisbericht', () => {
-  it('enthaelt keine Identitaetsdaten, keine Blutdruckwerte und keine Freitexte', () => {
+  it('enthaelt keine Identitaetsdaten und keine Freitexte', () => {
     seedLocalState();
     const record = localRecord();
     expect(record).not.toBeNull();
@@ -108,10 +108,21 @@ describe('Ergebnisbericht', () => {
     expect(serialised).not.toContain(CONTACT);
     expect(serialised).not.toContain(identity.accessCode);
     expect(serialised).not.toContain(NOTE);
-    // Einzelne Blutdruckzahlen duerfen nicht auftauchen, nur die Anzahl.
-    expect(serialised).not.toContain('128');
-    expect(serialised).not.toContain('"systolic"');
     expect(report.bpEntryCount).toBe(1);
+  });
+
+  /**
+   * Freigabe des Auftraggebers vom 06.08.2026: die Werte gehen mit, die Notiz
+   * nicht. Geprueft wird beides am erzeugten Bericht.
+   */
+  it('uebermittelt die Blutdruckwerte ohne Freitextnotiz', () => {
+    seedLocalState();
+    const report = buildSharedReport(localRecord()!);
+
+    expect(report.bpEntries).toHaveLength(1);
+    expect(report.bpEntries[0]?.systolic).toBe(128);
+    expect(report.bpEntries[0]?.diastolic).toBe(84);
+    expect(report.bpEntries[0]?.note).toBeNull();
   });
 
   it('entfernt die Profilangaben vor dem Versand', () => {
@@ -162,15 +173,28 @@ describe('Einlesen geteilter Berichte', () => {
     expect(parseSharedReport({ schema: REPORT_SCHEMA, pilotId: 'P-002' })).toBeNull();
   });
 
-  it('uebernimmt keine untergeschobenen Profil- oder Blutdruckfelder', () => {
+  it('uebernimmt keine untergeschobenen Profilangaben und keine Notizen', () => {
     const parsed = parseSharedReport({
       schema: REPORT_SCHEMA,
       pilotId: 'P-002',
-      bpEntryCount: 3,
+      bpEntryCount: 1,
+      bpEntries: [
+        {
+          id: 'bp_1',
+          date: '2026-03-02',
+          time: '07:15',
+          systolic: 128,
+          diastolic: 84,
+          pulse: 62,
+          note: NOTE,
+          daypart: 'morning',
+          createdAt: '2026-03-02T07:20:00.000Z',
+          updatedAt: '2026-03-02T07:20:00.000Z',
+        },
+      ],
       participant: {
         ...createEmptyParticipant(),
         profile,
-        bpEntries: [{ systolic: 128, diastolic: 84 }],
         note: NOTE,
       },
       events: [],
@@ -178,7 +202,9 @@ describe('Einlesen geteilter Berichte', () => {
 
     expect(parsed).not.toBeNull();
     expect(parsed!.participant.profile).toBeNull();
+    // Die Werte kommen an, die Notiz wird beim Einlesen verworfen.
+    expect(parsed!.bpEntries[0]?.systolic).toBe(128);
+    expect(parsed!.bpEntries[0]?.note).toBeNull();
     expect(JSON.stringify(parsed)).not.toContain(NOTE);
-    expect(JSON.stringify(parsed)).not.toContain('"systolic"');
   });
 });

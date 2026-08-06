@@ -19,6 +19,8 @@ export const STORAGE_KEYS = {
   adminLog: 'hw.admin.v1',
   /** Laufender Timerzustand (B.7). */
   timer: 'hw.timer.v1',
+  /** Stand der automatischen Uebermittlung an die Berichtsablage. */
+  sync: 'hw.sync.v1',
 } as const;
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];

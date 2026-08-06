@@ -125,13 +125,19 @@ describe('Auswertungsdatensatz (§26 «Datenschutzgrenze»)', () => {
     expect(record?.pilotId).toBe('P-001');
   });
 
-  it('enthaelt vom Blutdrucktagebuch nur die Anzahl der Eintraege', () => {
+  /**
+   * Freigabe des Auftraggebers vom 06.08.2026: Blutdruckwerte duerfen in die
+   * Auswertung. Die Freitextnotiz bleibt ausgeschlossen — sie kann
+   * identifizierende Angaben enthalten.
+   */
+  it('enthaelt die Blutdruckwerte, aber keine Freitextnotiz', () => {
     seedLocalState();
     const record = localRecord();
     expect(record?.bpEntryCount).toBe(1);
-    const serialized = JSON.stringify(record);
-    expect(serialized).not.toContain('147');
-    expect(serialized).not.toContain(NOTE);
+    expect(record?.bpEntries).toHaveLength(1);
+    expect(record?.bpEntries[0]?.systolic).toBe(147);
+    expect(record?.bpEntries[0]?.note).toBeNull();
+    expect(JSON.stringify(record)).not.toContain(NOTE);
   });
 });
 

@@ -69,7 +69,18 @@ export const adminContent = defineContent({
   'admin.metric.trainingLocked': { owner: 'medical', text: 'Zugänge mit gesperrter Trainingsfunktion' },
   'admin.metric.sessionsTotal': { owner: 'product', text: 'Absolvierte Einheiten gesamt' },
   'admin.metric.sessionsPerWeek': { owner: 'product', text: 'Einheiten pro Woche im Schnitt' },
-  'admin.metric.completionSplit': { owner: 'product', text: 'Anteil vollständig, teilweise, nicht' },
+  'admin.metric.sessionsFullyCompleted': {
+    owner: 'product',
+    text: 'Vollständig durchgeführte Einheiten',
+  },
+  'admin.metric.sessionsFullyCompletedHint': {
+    owner: 'product',
+    text: 'Alle vier Sätze bis zum Zwischenziel gehalten, ohne Abbruch. Gezählt wird der aufgezeichnete Verlauf, nicht die Selbstauskunft.',
+  },
+  'admin.metric.completionSplit': {
+    owner: 'product',
+    text: 'Selbstauskunft: vollständig, teilweise, nicht',
+  },
   'admin.metric.lightVariant': { owner: 'product', text: 'Nutzung leichte Variante' },
   'admin.metric.standardVariant': { owner: 'product', text: 'Nutzung normale Variante' },
   'admin.metric.optionalTarget': { owner: 'product', text: 'Nutzung freiwilliges Zusatzziel' },
@@ -111,9 +122,20 @@ export const adminContent = defineContent({
   'admin.reports.title': { owner: 'privacy', text: 'Geteilte Ergebnisberichte' },
   'admin.reports.text': {
     owner: 'privacy',
-    text: 'Berichte, die Teilnehmende freiwillig geteilt haben, direkt aus der Ablage laden. Teilt eine Pilotnummer mehrere Berichte, zählt der zuletzt geteilte.',
+    text: 'Die Berichte werden beim Anmelden geladen. Übermittelt eine Pilotnummer mehrere Berichte, zählt der zuletzt übermittelte.',
   },
-  'admin.reports.load': { owner: 'privacy', text: 'Berichte laden' },
+  'admin.reports.refresh': { owner: 'privacy', text: 'Aktualisieren' },
+
+  'admin.bpChart.title': { owner: 'privacy', text: 'Blutdruckverlauf je Person' },
+  'admin.bpChart.text': {
+    owner: 'medical',
+    text: 'Dargestellt werden die übermittelten Zahlen einer Pilotnummer. Die Ansicht nimmt keine Einordnung vor und stellt keinen Bezug zum Training her.',
+  },
+  'admin.bpChart.select': { owner: 'privacy', text: 'Pilotnummer' },
+  'admin.bpChart.empty': {
+    owner: 'privacy',
+    text: 'Noch keine Blutdruckwerte übermittelt.',
+  },
   'admin.reports.loading': { owner: 'privacy', text: 'Berichte werden geladen …' },
   'admin.reports.loaded': { owner: 'privacy', text: '{count} Bericht(e) geladen.' },
   'admin.reports.empty': {

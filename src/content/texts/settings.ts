@@ -43,33 +43,6 @@ export const settingsContent = defineContent({
   },
   'settings.export.action': { owner: 'privacy', text: 'Daten herunterladen' },
 
-  'settings.share.title': { owner: 'privacy', text: 'Ergebnisbericht teilen' },
-  'settings.share.text': {
-    owner: 'privacy',
-    text: 'Sie können Ihren Trainingsverlauf für die Pilotauswertung an Helsana übermitteln. Übermittelt werden Ihre Trainingseinheiten, Ihre Antworten aus dem Startfragebogen und die Anzahl Ihrer Blutdruckeinträge. Nicht übermittelt werden Ihr Name, Ihre Kontaktangaben, Ihre Grösse, Ihr Gewicht, Ihr Geburtsjahr, Ihre Notizen und Ihre einzelnen Blutdruckwerte.',
-  },
-  'settings.share.anonymity': {
-    owner: 'privacy',
-    text: 'Der Bericht enthält nur Ihre Pilotnummer, nicht Ihren Namen. Er wird nicht per E-Mail versendet.',
-  },
-  'settings.share.action': { owner: 'privacy', text: 'Ergebnisbericht teilen' },
-  'settings.share.pending': { owner: 'privacy', text: 'Bericht wird übermittelt …' },
-  'settings.share.done': {
-    owner: 'privacy',
-    text: 'Vielen Dank. Ihr Ergebnisbericht wurde übermittelt.',
-  },
-  'settings.share.offline': {
-    owner: 'privacy',
-    text: 'Ohne Netzverbindung lässt sich der Bericht nicht übermitteln. Bitte versuchen Sie es später erneut.',
-  },
-  'settings.share.failed': {
-    owner: 'privacy',
-    text: 'Die Übermittlung hat nicht geklappt. Bitte versuchen Sie es später erneut. Ihre Daten auf diesem Gerät sind unverändert.',
-  },
-  'settings.share.noData': {
-    owner: 'privacy',
-    text: 'Sobald Sie Ihr Programm gestartet haben, können Sie einen Bericht teilen.',
-  },
 
   'settings.deleteBp.title': { owner: 'privacy', text: 'Blutdruckeinträge löschen' },
   'settings.deleteBp.text': {
@@ -99,7 +72,7 @@ export const settingsContent = defineContent({
   'legal.privacyPolicy.title': { owner: 'privacy', text: 'Datenschutzerklärung' },
   'legal.privacyPolicy.text': {
     owner: 'privacy',
-    text: 'Diese Pilotversion speichert alle Angaben auf Ihrem Gerät. Daten werden nur dann übermittelt, wenn Sie in den Einstellungen ausdrücklich «Ergebnisbericht teilen» wählen; es findet keine automatische Übermittlung im Hintergrund statt. Ein geteilter Bericht enthält Ihre Trainingseinheiten, Ihre Antworten aus dem Startfragebogen und die Anzahl Ihrer Blutdruckeinträge, verbunden mit Ihrer Pilotnummer. Er enthält weder Ihren Namen noch Ihre Kontaktangaben, weder Ihre Grösse, Ihr Gewicht und Ihr Geburtsjahr noch Ihre Notizen oder einzelne Blutdruckzahlen. Die Berichte liegen auf einem Server in der Schweiz und sind nur dem Projektteam zugänglich. Sie können Ihre Daten jederzeit exportieren und löschen. Verantwortlich für die Pilotdurchführung ist das Projektteam von Helsana.',
+    text: 'Diese Pilotversion speichert alle Angaben auf Ihrem Gerät. Für die Pilotauswertung wird Ihr Stand laufend an Helsana übermittelt: nach jeder Trainingseinheit und nach jedem Eintrag im Blutdrucktagebuch. Übermittelt werden Ihre Trainingseinheiten, Ihre Antworten aus dem Startfragebogen sowie — sofern Sie das Tagebuch nutzen — Ihre Blutdruckeinträge mit Datum, Uhrzeit und Zahlen, jeweils verbunden mit Ihrer Pilotnummer. Nicht übermittelt werden Ihr Name, Ihre Kontaktangaben, Ihre Grösse, Ihr Gewicht, Ihr Geburtsjahr und Ihre Notizen. Die Daten liegen auf einem Server in der Schweiz und sind nur dem Projektteam zugänglich. Sie können Ihre Daten jederzeit exportieren und löschen; für die bereits übermittelten Daten wenden Sie sich an das Projektteam. Verantwortlich für die Pilotdurchführung ist das Projektteam von Helsana.',
   },
   'legal.imprint.title': { owner: 'legal', text: 'Impressum' },
   'legal.imprint.text': {

@@ -12,6 +12,7 @@ import type {
   Weekday,
 } from '../domain/types';
 import { isTrainingUnlocked } from '../domain/access';
+import { SETS_PER_SESSION } from '../domain/week-matrix';
 import type { PilotParticipantRecord } from './pilot-dataset';
 import { isActiveRecord } from './pilot-dataset';
 
@@ -58,6 +59,13 @@ export interface DashboardMetrics {
   trainingLocked: number;
   sessionsTotal: number;
   sessionsPerWeek: number;
+  /**
+   * Aus dem Trainingsverlauf abgeleitet, nicht aus der Selbstauskunft: alle
+   * vier Saetze aufgezeichnet, jeder bis zum Zwischenziel gehalten, kein
+   * Abbruch. Ergaenzt `completionSplit`, das die Antwort aus der Rueckmeldung
+   * nach der Einheit zaehlt.
+   */
+  sessionsFullyCompleted: number;
   completionSplit: Record<SessionCompletion, number>;
   lightVariantSessions: number;
   standardVariantSessions: number;
@@ -119,6 +127,22 @@ export function filterRecords(
   );
 }
 
+/**
+ * Vollstaendig durchgefuehrte Einheit — gemessen am aufgezeichneten Verlauf,
+ * nicht an der Selbstauskunft.
+ *
+ * Massstab sind die Satzergebnisse und nicht die verstrichene Zeit: der Timer
+ * rechnet aus Zeitstempeln und laeuft weiter, wenn die Seite im Hintergrund
+ * liegt, und die Zielzeit haengt von Woche und Variante ab. Eine feste
+ * Mindestdauer waere deshalb in Woche 1 zu lang und in Woche 12 zu kurz.
+ * «Zwischenziel erreicht» ist derselbe Erfolgsmassstab wie im Rest der App (§18).
+ */
+export function isFullyCompleted(session: TrainingSession): boolean {
+  if (session.aborted) return false;
+  if (session.sets.length < SETS_PER_SESSION) return false;
+  return session.sets.every((set) => set.targetReached && !set.stoppedEarly);
+}
+
 export function aggregate(
   records: readonly PilotParticipantRecord[],
   filters: DashboardFilters,
@@ -176,6 +200,7 @@ export function aggregate(
     ).length,
     sessionsTotal: sessions.length,
     sessionsPerWeek: sessions.length === 0 ? 0 : sessions.length / weeksCovered,
+    sessionsFullyCompleted: sessions.filter(({ session }) => isFullyCompleted(session)).length,
     completionSplit,
     lightVariantSessions: sessions.filter(({ session }) => session.variant === 'light').length,
     standardVariantSessions: sessions.filter(({ session }) => session.variant === 'standard')

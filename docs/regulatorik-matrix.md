@@ -14,9 +14,9 @@ prozessualen und technischen Freigaben ausserhalb der Texte bleiben davon unberu
 |---|---|---|---|---|
 | 1 | eine Diagnose stellen | Der Begriff kommt in keinem kundensichtbaren Text vor; Muster `diagnose-begriff` sperrt ihn. Der Disclaimer ist als «ersetzt keine medizinische Untersuchung, Behandlung oder Beratung» formuliert (`consent.item.noMedicalAdvice`). | `src/content/content-compliance.test.ts` | – (Wortlaut freigegeben 03.08.2026) |
 | 2 | feststellen, ob eine Person Bluthochdruck hat | Keine Auswertung im Blutdruckmodul; Muster `bluthochdruck-feststellung`. | `src/content/content-compliance.test.ts`, `src/data/bp-repository.test.ts` | Medical |
-| 3 | Blutdruckwerte medizinisch interpretieren | `src/data/bp-repository.ts` exportiert ausschliesslich CRUD, Doppelpruefung, Anzahl und Rohdatenexport. Die Exportliste wird gegen eine Allowlist geprueft. | `src/data/bp-repository.test.ts` | Medical, Regulatory |
+| 3 | Blutdruckwerte medizinisch interpretieren | `src/data/bp-repository.ts` exportiert ausschliesslich CRUD, Doppelpruefung, Anzahl und Rohdatenexport. Die Exportliste wird gegen eine Allowlist geprueft. Die seit 06.08.2026 zulaessige Verlaufsgrafik (`src/components/BpChart.tsx`) stellt nur die eingegebenen Zahlen dar: keine Zielbereiche, keine Kategoriezonen, kein Mittelwert, keine Trendlinie; die Punkteberechnung liegt in der Komponente, nicht in der Datenschicht. | `src/data/bp-repository.test.ts`, `src/design/design-compliance.test.ts` | Medical, Regulatory |
 | 4 | individuelle Zielwerte festlegen | Zielzeiten stammen ausschliesslich aus der Wochenmatrix (`src/domain/week-matrix.ts`), nie aus Messwerten. Muster `zielwert`. | `src/domain/week-matrix.test.ts`, `src/content/content-compliance.test.ts` | – |
-| 5 | Blutdruckwerte in Kategorien einteilen | Keine Kategorisierungsfunktion vorhanden; Muster `kategorisierung`. | `src/data/bp-repository.test.ts`, `src/content/content-compliance.test.ts` | Medical |
+| 5 | Blutdruckwerte in Kategorien einteilen | Keine Kategorisierungsfunktion vorhanden; Muster `kategorisierung`. Die Verlaufsgrafik zeichnet keine Kategoriezonen und keine Normbaender; die Skala folgt allein den eingegebenen Zahlen. | `src/data/bp-repository.test.ts`, `src/content/content-compliance.test.ts` | Medical |
 | 6 | Ampelfarben fuer Blutdruckwerte verwenden | Blutdruck- und Fortschrittsdateien duerfen keine `status-*`-Tokens und keine bewertenden Inline-Notifications enthalten. | `src/design/design-compliance.test.ts` | – |
 | 7 | aufgrund eines Blutdruckwertes eine Warnstufe berechnen | Keine Warnlogik implementiert; Muster `ampel-warnstufe`. | `src/content/content-compliance.test.ts` | Medical, Regulatory |
 | 8 | aufgrund von Blutdruckwerten das Training anpassen | `suggestVariant` nimmt ausschliesslich `CheckinContext` entgegen; Blutdruckdaten sind nicht Teil des Typs. | `src/data/store.test.ts` («unabhaengig von Blutdruckwerten»), `src/domain/checkin-rules.test.ts` | Medical |
@@ -28,6 +28,31 @@ prozessualen und technischen Freigaben ausserhalb der Texte bleiben davon unberu
 | 14 | eine individuelle Prognose erstellen | Keine Prognosefunktion; Muster `risiko` deckt `prognose` mit ab. In den Lernkarten sperrt `edu-persoenliches-risiko` jede Aussage ueber «Ihr Risiko»; allgemeine Aussagen zur Studienlage (Lernkarte `alkohol`) bleiben zulaessig. | `src/content/content-compliance.test.ts` | – (Wortlaut freigegeben 03.08.2026) |
 | 15 | einen medizinischen Score oder ein Risikoprofil berechnen | Kein Score im Code; Muster `score` und `risiko`. Die Zuversichtsangabe aus §12 Frage 8 steuert nur Textauswahl (`src/domain/personalization.ts`). | `src/content/content-compliance.test.ts` | Medical |
 | 16 | ein generatives KI-Modell fuer individuelle Gesundheitsberatung einsetzen | Keine KI-Abhaengigkeit im Projekt; Personalisierung ist regelbasiert und vollstaendig lokal. | `package.json` ohne KI-Abhaengigkeit; `src/domain/personalization.ts` | – |
+
+## Freigabe fuer die Uebermittlung und Darstellung von Blutdruckwerten (06.08.2026)
+
+Der Auftraggeber (Mitarbeiter/in Helsana) hat am 06.08.2026 freigegeben, dass fuer den Pilot
+
+1. die Blutdruckwerte an die Pilotablage uebermittelt werden duerfen (Abweichung von B.13.6),
+2. sie im Auswertungs-Dashboard je Pilotnummer sichtbar sein duerfen (Abweichung von B.11.9),
+3. eine Verlaufsgrafik sowohl im Dashboard als auch in der Teilnehmeransicht gezeigt werden darf.
+
+Begruendung des Auftraggebers: kleiner, bezahlter Pilot mit ausgewaehlter Nutzergruppe.
+
+**Die Freigabe betrifft ausschliesslich die Darstellung, nicht die Bewertung.** Unveraendert
+gesperrt bleiben und weiterhin durch Tests abgedeckt sind:
+
+| Weiterhin unzulaessig | Absicherung |
+|---|---|
+| Zielbereiche, Normbaender, Kategoriezonen in der Grafik | `src/components/BpChart.tsx` zeichnet keine; Skala folgt den Daten |
+| Ampel- und Statusfarben an Blutdruckwerten | `src/design/design-compliance.test.ts` (Dateiname `BpChart.tsx` faellt unter das Muster `Bp[A-Z]`) |
+| Mittelwert, Trendlinie, Bewertung in der Datenschicht | Allowlist in `src/data/bp-repository.test.ts` unveraendert |
+| Blutdruck und Training in derselben Darstellung | Getrennte Karten; keine gemeinsame Achse |
+| Freitextnotizen in Bericht und Dashboard | `localRecord()`, `buildSharedReport()`, `parseSharedReport()`; `src/data/anonymisation.test.ts` |
+
+Die eigentliche Auswertung der Werte findet ausserhalb der App statt. Vor einem Pilot mit echten
+Teilnehmenden bleiben offen: Auftragsverarbeitungsvertrag mit dem Betreiber der Ablage,
+Loeschfristen und die Zustimmung des Datenschutzes bei Helsana.
 
 ## Ausnahme fuer medizinisch freigegebene Lerninhalte (§22)
 

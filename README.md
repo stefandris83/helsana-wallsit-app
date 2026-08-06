@@ -85,32 +85,59 @@ fuer einen Pilot mit echten Teilnehmerdaten:
 - Das Repository ist oeffentlich und enthaelt neben dem Code auch `spec.md`, `design-system.md`
   und `CLAUDE.md` sowie das Helsana-Logo (Herkunft siehe «Design System «Unify»»).
 
-## Ergebnisberichte teilen und auswerten
+## Ergebnisberichte uebermitteln und auswerten
 
-Teilnehmende koennen ihren Trainingsverlauf freiwillig fuer die Pilotauswertung uebermitteln:
-**Einstellungen → Daten → «Ergebnisbericht teilen»**. Der Bericht landet als JSON-Datei in einem
-privaten Ablageordner. Im Dashboard meldet sich die auswertende Person mit ihrem Projektkonto an
-und laedt die Berichte unter «Geteilte Ergebnisberichte» direkt aus der Ablage.
+Die Uebermittlung laeuft **automatisch**: nach jeder abgeschlossenen Trainingseinheit und jedem
+Eintrag im Blutdrucktagebuch legt die App den aktuellen Stand als JSON-Datei im privaten
+Ablageordner ab. Im Dashboard meldet sich die auswertende Person mit ihrem Projektkonto an; die
+Berichte werden dabei ohne weiteren Klick geladen.
 
-Der Weg ist bewusst manuell und einmalig pro Knopfdruck. Es gibt **keine** Hintergrund-
-synchronisation: ohne aktives Zutun der Person verlaesst kein Datum das Geraet.
+Freigegeben durch den Auftraggeber am 06.08.2026. Damit weichen zwei Vorentscheide ab:
+
+- **B.13.6** — der Pilotexport enthaelt nicht mehr nur die Anzahl der Blutdruckeintraege, sondern
+  die Werte selbst.
+- **B.11.9** — das Dashboard zeigt einzelne Blutdruckwerte, in Form einer Verlaufsgrafik je
+  Pilotnummer.
+
+Local-first bleibt bestehen: gespeichert wird zuerst auf dem Geraet, die Uebermittlung ist der
+zweite Schritt. Ein Fehlschlag (Funkloch, Flugmodus) aendert am lokalen Zustand nichts und wird
+beim naechsten Start nachgeholt (`src/data/auto-sync.ts`, Stand in `hw.sync.v1`).
 
 **Warum nicht per E-Mail.** Eine Mail zeigt die Absenderadresse und hebt damit die Pseudonymitaet
 auf, die das Codesystem herstellt. Ueber den Ablageordner kommt nur die Pilotnummer an.
 
-### Was im Bericht steht — und was nicht
+### Was uebermittelt wird — und was nicht
 
 | Enthalten | Nicht enthalten |
 |---|---|
 | Pilotnummer | Name, Kontaktangabe, Zugangscode |
 | Trainingseinheiten mit Haltezeiten und Rueckmeldungen | Groesse, Gewicht, Geburtsjahr, Geschlecht |
-| Antworten aus dem Startfragebogen | einzelne Blutdruckwerte |
-| Ereignis-Log, Lernkarten- und Erinnerungsnutzung | Freitextnotizen aus dem Blutdrucktagebuch |
-| Anzahl der Blutdruckeintraege | |
+| Antworten aus dem Startfragebogen | Freitextnotizen aus dem Blutdrucktagebuch |
+| Ereignis-Log, Lernkarten- und Erinnerungsnutzung | |
+| Blutdruckeintraege mit Datum, Uhrzeit und Zahlen | |
 
 Die Zusammenstellung erzwingt das: der Bericht entsteht aus `PilotParticipantRecord`, der
-Identitaetsdaten gar nicht kennt (B.4), und `buildSharedReport()` entfernt zusaetzlich die
-Profilangaben. `src/data/report-sharing.test.ts` prueft das am erzeugten JSON.
+Identitaetsdaten gar nicht kennt (B.4). `localRecord()` streicht die Notiz aus jedem
+Blutdruckeintrag, `buildSharedReport()` entfernt zusaetzlich die Profilangaben, und
+`parseSharedReport()` baut die Eintraege beim Einlesen aus bekannten Feldern neu auf. Geprueft in
+`src/data/report-sharing.test.ts` und `src/data/anonymisation.test.ts`.
+
+**Blutdruckwerte nur mit Einwilligung.** Ist das Tagebuch nicht aktiviert oder wird die
+Einwilligung widerrufen, uebermittelt `syncNow()` die Werte nicht mehr; die bereits erfassten
+Eintraege bleiben auf dem Geraet. Geprueft in `src/data/auto-sync.test.ts`.
+
+### Grenze der Darstellung
+
+Die Verlaufsgrafik (`src/components/BpChart.tsx`) zeigt ausschliesslich die eingegebenen Zahlen
+ueber die Zeit — in der Teilnehmeransicht und im Dashboard je Pilotnummer. Sie enthaelt bewusst
+**keine** Zielbereiche, Normbaender oder Kategoriezonen, **keine** Ampel- oder Statusfarben,
+**keinen** Mittelwert, **keine** Trendlinie und **keine** Trainingsdaten in derselben Darstellung.
+Die Verbote 3, 5, 6 und 11 aus §3 bleiben damit unberuehrt: freigegeben ist die Darstellung der
+Zahlen, nicht deren Bewertung. Die Auswertung selbst findet ausserhalb der App statt.
+
+Die Datenschicht `src/data/bp-repository.ts` bietet weiterhin keine Aggregat-, Trend- oder
+Bewertungsfunktion an; die Punkteberechnung der Grafik liegt in der Komponente. Die Allowlist in
+`src/data/bp-repository.test.ts` gilt unveraendert.
 
 Beim Einlesen greift dieselbe Grenze noch einmal von der anderen Seite: `parseSharedReport()`
 baut den Datensatz aus einem leeren Nutzungsdatensatz auf und uebernimmt nur bekannte Felder.
@@ -181,6 +208,18 @@ Selbstregistrierung abschalten, damit ueberhaupt nur angelegte Konten existieren
 - **Geladene Berichte werden nicht gespeichert.** Sie bleiben nur fuer die Sitzung im
   Arbeitsspeicher des Dashboards und sind nach einem Reload erneut zu laden. Das ist Absicht:
   auf dem Geraet der auswertenden Person entsteht keine Datensammlung.
+- **Kein Abschalt-Schalter in der App.** Entscheid des Auftraggebers vom 06.08.2026: die
+  Uebermittlung der Trainingsdaten laeuft, solange die Teilnahme besteht. Ausstiege sind der
+  Widerruf der Blutdruck-Einwilligung (stoppt die Werte) und «Zugang und alle Daten loeschen»
+  (stoppt alles). Ein Schalter samt Zeile «Zuletzt uebermittelt …» waere nachtraeglich in etwa
+  zehn Minuten ergaenzbar.
+- **Loeschung bereits uebermittelter Daten von Hand.** Die App kann in der Ablage nichts
+  loeschen — das Loeschrecht ist dem ausgelieferten Schluessel bewusst entzogen. Verlangt eine
+  Person die Loeschung, entfernt das Projektteam die Dateien mit ihrer Pilotnummer in der
+  Supabase-Oberflaeche unter *Storage → berichte*.
+- **Ein Geraet je Person.** Zwei Geraete mit demselben Zugangscode ueberschreiben sich in der
+  Auswertung gegenseitig, weil beide unter derselben Pilotnummer ablegen und der zuletzt
+  uebermittelte Stand gewinnt. Fuer den Pilot organisatorisch geloest.
 - **Abweichung von CLAUDE.md B.4.** Die Vorgabe «im MVP verlassen keine Daten das Geraet» ist mit
   dieser Funktion nicht mehr uneingeschraenkt erfuellt. Der Auftraggeber hat sie am 03.08.2026
   ausdruecklich gewuenscht, nachdem der Mailweg als Bruch der Pseudonymitaet erkannt wurde. Die
@@ -346,18 +385,31 @@ Synthetisch, ohne reale Personendaten, in `src/demo/demo-data.ts`.
 
 ## Pilot-Dashboard
 
-Erreichbar unter `/admin`, geschuetzt durch `VITE_ADMIN_CODE`.
+Erreichbar unter `/admin`. Ist eine Berichtsablage konfiguriert, meldet sich die auswertende
+Person mit ihrem Projektkonto an (Abschnitt «Anmeldung am Dashboard»); ohne Ablage greift der
+Platzhalter-Codeschutz ueber `VITE_ADMIN_CODE`.
 
 **Der Codeschutz ist ein Platzhalter fuer den Pilot und kein produktiver
 Authentisierungsmechanismus.** Produktiv vorgesehen ist eine Anbindung an das
 Helsana-Identitaetsmanagement mit getrennten Rollen; siehe
 [`docs/schnittstellen.md`](docs/schnittstellen.md).
 
-Das Dashboard zeigt Uebersichtskennzahlen, Fragebogenauswertung, wenige Filter
-(Programmwoche, Zeitraum, aktive/inaktive Teilnahme, Variante) und den CSV-Export. Es zeigt
-keine Namen, keine Kontaktangaben, keine Geburtsdaten, keine Freitextnotizen und keine
-einzelnen Blutdruckwerte. Aggregierte Werte erscheinen erst ab fuenf zugrunde liegenden
-Personen, sonst ein neutraler Hinweis. Administrative Zugriffe werden lokal protokolliert.
+Das Dashboard zeigt Uebersichtskennzahlen, Fragebogenauswertung, die Blutdruck-Verlaufsgrafik je
+Pilotnummer, wenige Filter (Programmwoche, Zeitraum, aktive/inaktive Teilnahme, Variante) und den
+CSV-Export. Es zeigt keine Namen, keine Kontaktangaben, keine Geburtsdaten und keine
+Freitextnotizen. Aggregierte Werte erscheinen erst ab fuenf zugrunde liegenden Personen, sonst ein
+neutraler Hinweis. Administrative Zugriffe werden lokal protokolliert.
+
+**Durchfuehrung: zwei getrennte Kennzahlen.** «Vollstaendig durchgefuehrte Einheiten» leitet sich
+aus dem aufgezeichneten Verlauf ab — alle vier Saetze bis zum Zwischenziel gehalten, kein
+Abbruch (`isFullyCompleted()` in `src/data/aggregation.ts`). Daneben steht die Selbstauskunft aus
+der Rueckmeldung nach der Einheit. Beide koennen auseinanderlaufen, und genau das ist der Zweck.
+
+Als Massstab dienen bewusst die Satzergebnisse und nicht die verstrichene Zeit: der Timer rechnet
+aus Zeitstempeln und laeuft weiter, wenn die Seite im Hintergrund liegt; ausserdem haengt die
+Zielzeit von Woche und Variante ab, sodass eine feste Mindestdauer in Woche 1 zu lang und in
+Woche 12 zu kurz waere. «Zwischenziel erreicht» ist derselbe Erfolgsmassstab wie im Rest der App
+(§18). Da «Pause ueberspringen» im MVP deaktiviert ist, laesst sich der Ablauf nicht abkuerzen.
 
 ## Vorentscheide (CLAUDE.md B.13)
 

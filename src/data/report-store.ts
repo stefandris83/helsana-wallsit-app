@@ -97,10 +97,22 @@ export async function loadReports(session: ReportSession): Promise<LoadOutcome> 
     if (!listing.ok) return { status: 'failed' };
 
     const objects = (await listing.json()) as StorageObject[];
-    const files = objects
-      .filter((object) => object.name.endsWith('.json'))
-      .map((object) => object.name)
-      .sort();
+    /**
+     * Bei automatischer Uebermittlung entstehen je Person viele Dateien. Der
+     * Name beginnt mit der Pilotnummer, gefolgt von einem sortierbaren
+     * Zeitstempel — geladen wird deshalb nur die jeweils zuletzt abgelegte
+     * Datei je Pilotnummer statt des gesamten Bestands.
+     */
+    const newestByPilotId = new Map<string, string>();
+    for (const object of objects) {
+      if (!object.name.endsWith('.json')) continue;
+      const pilotId = object.name.split('-').slice(0, 2).join('-');
+      const known = newestByPilotId.get(pilotId);
+      if (known === undefined || object.name > known) {
+        newestByPilotId.set(pilotId, object.name);
+      }
+    }
+    const files = [...newestByPilotId.values()].sort();
 
     const byPilotId = new Map<string, PilotParticipantRecord>();
     const rejected: string[] = [];

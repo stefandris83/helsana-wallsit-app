@@ -12,9 +12,6 @@ import type { ContentId } from '../../content/registry';
 import { formatIsoDate } from '../../domain/dates';
 import { buildOwnDataExport } from '../../data/export';
 import { loadEvents } from '../../data/event-log';
-import { localRecord } from '../../data/pilot-dataset';
-import { buildSharedReport, uploadSharedReport } from '../../data/report-sharing';
-import { isReportSharingConfigured } from '../../app/config';
 import { useAppStore } from '../../data/store';
 
 const consentItems: { key: 'voluntary' | 'privacy' | 'noMedicalAdvice' | 'analytics' | 'profileStorage'; labelId: ContentId }[] = [
@@ -39,28 +36,6 @@ export function SettingsDataScreen() {
   const [deleteAllChecked, setDeleteAllChecked] = useState(false);
   const [confirmDeleteBp, setConfirmDeleteBp] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
-  const [sharing, setSharing] = useState(false);
-  const [shareError, setShareError] = useState<string | null>(null);
-
-  const sharingAvailable = isReportSharingConfigured();
-  const hasProgramme = participant.plan !== null;
-
-  const shareReport = async () => {
-    const record = localRecord();
-    if (!record) return;
-    setSharing(true);
-    setShareError(null);
-    setNotice(null);
-    const result = await uploadSharedReport(buildSharedReport(record));
-    setSharing(false);
-    if (result.status === 'success') {
-      setNotice(t('settings.share.done'));
-      return;
-    }
-    setShareError(
-      result.status === 'offline' ? t('settings.share.offline') : t('settings.share.failed'),
-    );
-  };
 
   const exportOwnData = () => {
     const payload = buildOwnDataExport(identity, participant, bpEntries, loadEvents());
@@ -168,33 +143,6 @@ export function SettingsDataScreen() {
           </Button>
         </div>
       </Card>
-
-      {sharingAvailable ? (
-        <Card>
-          <div className="flex flex-col gap-frog">
-            <h2 className="h5">{t('settings.share.title')}</h2>
-            <p className="body-m-copy">{t('settings.share.text')}</p>
-            <p className="helper-m text-secondary">{t('settings.share.anonymity')}</p>
-            {shareError ? (
-              <InlineNotification type="error" iconLabel={shareError}>
-                {shareError}
-              </InlineNotification>
-            ) : null}
-            <Button
-              variant="secondary"
-              block
-              iconLeft="upload"
-              disabled={sharing || !hasProgramme}
-              onClick={() => void shareReport()}
-            >
-              {sharing ? t('settings.share.pending') : t('settings.share.action')}
-            </Button>
-            {hasProgramme ? null : (
-              <p className="helper-m text-secondary">{t('settings.share.noData')}</p>
-            )}
-          </div>
-        </Card>
-      ) : null}
 
       <Card>
         <div className="flex flex-col gap-frog">

@@ -1,6 +1,7 @@
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import type { OnboardingStage } from '../domain/access';
+import { startAutoSync } from '../data/auto-sync';
 import { selectOnboardingStage } from '../data/selectors';
 import { useAppStore } from '../data/store';
 import { AppLayout } from './AppLayout';
@@ -78,6 +79,9 @@ function StartRedirect() {
 }
 
 export function App() {
+  // Automatische Uebermittlung an die Berichtsablage (freigegeben 06.08.2026).
+  useEffect(() => startAutoSync(), []);
+
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <ThemeProvider>

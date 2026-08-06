@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BpChart } from '../../components/BpChart';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { Checkbox } from '../../components/Choice';
@@ -113,6 +114,8 @@ export function AdminScreen() {
       setAuthenticated(true);
       logAdminAction('login_success');
       logAdminAction('dashboard_viewed');
+      // Berichte ohne weiteren Klick laden.
+      void fetchReports(result.session);
       return;
     }
     setLoginError(true);
@@ -122,12 +125,12 @@ export function AdminScreen() {
     logAdminAction('login_failed');
   };
 
-  const fetchReports = async () => {
-    if (!session) return;
+  const fetchReports = async (useSession: ReportSession | null = session) => {
+    if (!useSession) return;
     setLoadingReports(true);
     setReportError(null);
     setReportNotice([]);
-    const outcome = await loadReports(session);
+    const outcome = await loadReports(useSession);
     setLoadingReports(false);
     if (outcome.status !== 'success') {
       setReportError(
@@ -158,6 +161,15 @@ export function AdminScreen() {
     () => aggregate(records, filters, today, config.minGroupSize),
     [records, filters, today],
   );
+
+  /** Datensaetze mit uebermittelten Blutdruckwerten, fuer die Verlaufsgrafik. */
+  const recordsWithBp = useMemo(
+    () => records.filter((record) => record.bpEntries.length >= 2),
+    [records],
+  );
+  const [bpPilotId, setBpPilotId] = useState('');
+  const selectedBpRecord =
+    recordsWithBp.find((record) => record.pilotId === bpPilotId) ?? recordsWithBp[0] ?? null;
 
   /**
    * Anmeldung mit einem echten Konto, sobald eine Berichtsablage konfiguriert
@@ -298,7 +310,7 @@ export function AdminScreen() {
               disabled={loadingReports}
               onClick={() => void fetchReports()}
             >
-              {loadingReports ? t('admin.reports.loading') : t('admin.reports.load')}
+              {loadingReports ? t('admin.reports.loading') : t('admin.reports.refresh')}
             </Button>
             {reportNotice.length > 0 ? (
               <InlineNotification type="success" iconLabel={reportNotice[0]}>
@@ -325,6 +337,29 @@ export function AdminScreen() {
           </div>
         </Card>
       ) : null}
+
+      <Card>
+        <div className="flex flex-col gap-frog">
+          <h2 className="h5">{t('admin.bpChart.title')}</h2>
+          <p className="body-m-copy">{t('admin.bpChart.text')}</p>
+          {selectedBpRecord === null ? (
+            <p className="body-m text-secondary">{t('admin.bpChart.empty')}</p>
+          ) : (
+            <>
+              <SelectField
+                label={t('admin.bpChart.select')}
+                value={selectedBpRecord.pilotId}
+                onChange={(event) => setBpPilotId(event.target.value)}
+                options={recordsWithBp.map((record) => ({
+                  value: record.pilotId,
+                  label: record.pilotId,
+                }))}
+              />
+              <BpChart entries={selectedBpRecord.bpEntries} captionSuffix={selectedBpRecord.pilotId} />
+            </>
+          )}
+        </div>
+      </Card>
 
       <Card>
         <div className="flex flex-col gap-frog">
@@ -451,6 +486,14 @@ export function AdminScreen() {
                 value={metrics.trainingLocked}
               />
               <StatTile label={t('admin.metric.sessionsTotal')} value={metrics.sessionsTotal} />
+              <StatTile
+                label={t('admin.metric.sessionsFullyCompleted')}
+                value={`${metrics.sessionsFullyCompleted} (${percentage(
+                  metrics.sessionsFullyCompleted,
+                  metrics.sessionsTotal,
+                )})`}
+                hint={t('admin.metric.sessionsFullyCompletedHint')}
+              />
               <StatTile
                 label={t('admin.metric.sessionsPerWeek')}
                 value={metrics.sessionsPerWeek.toFixed(1)}
