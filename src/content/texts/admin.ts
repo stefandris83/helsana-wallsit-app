@@ -42,7 +42,7 @@ export const adminContent = defineContent({
 
   'admin.privacyNotice': {
     owner: 'privacy',
-    text: 'Diese Ansicht zeigt keine Namen, keine Kontaktangaben, keine Geburtsdaten, keine Freitextnotizen und keine einzelnen Blutdruckzahlen.',
+    text: 'Diese Ansicht zeigt keine Namen, keine Kontaktangaben, keine Geburtsdaten und keine Freitextnotizen. Geladene Berichte bleiben nur für diese Sitzung im Arbeitsspeicher und werden auf diesem Gerät nicht gespeichert.',
   },
   'admin.minGroupNotice': {
     owner: 'privacy',
@@ -119,11 +119,6 @@ export const adminContent = defineContent({
   'admin.filter.to': { owner: 'product', text: 'Bis' },
   'admin.filter.reset': { owner: 'product', text: 'Filter zurücksetzen' },
 
-  'admin.reports.title': { owner: 'privacy', text: 'Geteilte Ergebnisberichte' },
-  'admin.reports.text': {
-    owner: 'privacy',
-    text: 'Die Berichte werden beim Anmelden geladen. Übermittelt eine Pilotnummer mehrere Berichte, zählt der zuletzt übermittelte.',
-  },
   'admin.reports.refresh': { owner: 'privacy', text: 'Aktualisieren' },
 
   'admin.bpChart.title': { owner: 'privacy', text: 'Blutdruckverlauf je Person' },
@@ -154,12 +149,6 @@ export const adminContent = defineContent({
     owner: 'privacy',
     text: '{count} Datei(en) konnten nicht gelesen werden und wurden übersprungen.',
   },
-  'admin.reports.retention': {
-    owner: 'privacy',
-    text: 'Geladene Berichte bleiben nur für diese Sitzung im Arbeitsspeicher und werden auf diesem Gerät nicht gespeichert.',
-  },
-  'admin.reports.clear': { owner: 'privacy', text: 'Geladene Berichte verwerfen' },
-  'admin.reports.count': { owner: 'privacy', text: 'Geladen: {count}' },
 
   'admin.export.title': { owner: 'privacy', text: 'CSV-Export anonymisierter Nutzungsdaten' },
   'admin.export.text': {

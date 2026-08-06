@@ -14,8 +14,7 @@ export type AdminAction =
   | 'filter_changed'
   | 'export_sessions'
   | 'export_events'
-  | 'reports_loaded'
-  | 'reports_cleared';
+  | 'reports_loaded';
 
 export interface AdminLogEntry {
   id: string;

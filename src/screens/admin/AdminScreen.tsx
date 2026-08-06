@@ -284,59 +284,39 @@ export function AdminScreen() {
 
   return (
     <div className="container flex min-h-screen flex-col gap-cat py-cat">
-      <div className="flex flex-col gap-bee">
-        <h1 className="h2">{t('admin.title')}</h1>
-        <p className="body-s text-secondary">{t('admin.subtitle')}</p>
+      <div className="flex flex-wrap items-end justify-between gap-rat">
+        <div className="flex flex-col gap-bee">
+          <h1 className="h2">{t('admin.title')}</h1>
+          <p className="body-s text-secondary">{t('admin.subtitle')}</p>
+        </div>
+        {session ? (
+          <Button
+            variant="secondary"
+            iconLeft="download"
+            disabled={loadingReports}
+            onClick={() => void fetchReports()}
+          >
+            {loadingReports ? t('admin.reports.loading') : t('admin.reports.refresh')}
+          </Button>
+        ) : null}
       </div>
+
+      {/* Ein Fehlschlag beim Laden muss auffallen: sonst sieht das Dashboard mit
+          bloss lokalen Daten unauffaellig aus und die Auswertung waere still falsch. */}
+      {reportError ? (
+        <InlineNotification type="error" iconLabel={reportError}>
+          {reportError}
+        </InlineNotification>
+      ) : null}
+      {reportNotice.length > 0 ? (
+        <InlineNotification type="success" iconLabel={reportNotice[0]}>
+          {reportNotice.join(' ')}
+        </InlineNotification>
+      ) : null}
 
       <InlineNotification type="info" iconLabel={t('admin.privacyNotice')}>
         {t('admin.privacyNotice')}
       </InlineNotification>
-
-      {session ? (
-        <Card>
-          <div className="flex flex-col gap-frog">
-            <h2 className="h5">{t('admin.reports.title')}</h2>
-            <p className="body-m-copy">{t('admin.reports.text')}</p>
-            {reportError ? (
-              <InlineNotification type="error" iconLabel={reportError}>
-                {reportError}
-              </InlineNotification>
-            ) : null}
-            <Button
-              variant="secondary"
-              block
-              iconLeft="download"
-              disabled={loadingReports}
-              onClick={() => void fetchReports()}
-            >
-              {loadingReports ? t('admin.reports.loading') : t('admin.reports.refresh')}
-            </Button>
-            {reportNotice.length > 0 ? (
-              <InlineNotification type="success" iconLabel={reportNotice[0]}>
-                {reportNotice.join(' ')}
-              </InlineNotification>
-            ) : null}
-            {loaded.length > 0 ? (
-              <>
-                <p className="body-m">{t('admin.reports.count', { count: loaded.length })}</p>
-                <Button
-                  variant="secondary"
-                  block
-                  onClick={() => {
-                    setLoaded([]);
-                    setReportNotice([]);
-                    logAdminAction('reports_cleared');
-                  }}
-                >
-                  {t('admin.reports.clear')}
-                </Button>
-              </>
-            ) : null}
-            <p className="helper-m text-secondary">{t('admin.reports.retention')}</p>
-          </div>
-        </Card>
-      ) : null}
 
       <Card>
         <div className="flex flex-col gap-frog">
