@@ -18,7 +18,10 @@ npm run dev
 
 Die App laeuft anschliessend auf `http://localhost:5173`. Einstieg: Einladungscode eingeben.
 Fuer den Test steht der synthetische Code **`WS-2026-A1B2`** zur Verfuegung (weitere Codes in
-`src/data/access-codes.ts`).
+`src/data/access-codes.ts`). Dieser Hinweis dient nur der Entwicklung: die App selbst nennt auf
+dem Zugangsbildschirm keinen echten Code mehr, damit auf der oeffentlichen Live-Seite kein
+Testpersonen-Code sichtbar ist. Das Eingabefeld zeigt stattdessen den erfundenen Platzhalter
+`WS-2026-XXXX`.
 
 **Team-Zugang.** Der Code **`WS-2026-TEAM`** (Pilotnummer `P-900`) ist dem Projektteam
 vorbehalten und als einziger mit `team: true` markiert. Nur er schaltet die Demodaten in den

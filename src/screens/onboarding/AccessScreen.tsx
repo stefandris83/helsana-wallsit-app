@@ -42,7 +42,6 @@ export function AccessScreen() {
             setError(false);
           }}
           error={error ? t('access.invalid') : undefined}
-          hint={t('access.demoHint')}
         />
 
         <InlineNotification iconLabel={t('access.privacyNote')}>

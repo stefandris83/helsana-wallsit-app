@@ -8,7 +8,7 @@ export const onboardingAccessContent = defineContent({
     text: 'Geben Sie den Einladungscode ein, den Sie von Helsana erhalten haben.',
   },
   'access.codeLabel': { owner: 'product', text: 'Einladungscode' },
-  'access.codePlaceholder': { owner: 'product', text: 'z. B. WS-2026-A1B2' },
+  'access.codePlaceholder': { owner: 'product', text: 'z. B. WS-2026-XXXX' },
   'access.submit': { owner: 'product', text: 'Code einlösen' },
   'access.invalid': {
     owner: 'product',
@@ -17,10 +17,6 @@ export const onboardingAccessContent = defineContent({
   'access.privacyNote': {
     owner: 'privacy',
     text: 'Der Code ist anonym. Ihr Name wird in dieser App nicht erfasst.',
-  },
-  'access.demoHint': {
-    owner: 'product',
-    text: 'Für den Test steht der synthetische Code WS-2026-A1B2 zur Verfügung.',
   },
 
   'consent.title': { owner: 'legal', text: 'Bevor es losgeht' },

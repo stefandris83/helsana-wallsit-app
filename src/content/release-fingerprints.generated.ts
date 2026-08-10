@@ -5,8 +5,7 @@
 
 export const approvedFingerprints: Readonly<Record<string, string>> = {
   'access.codeLabel': '3e120c94',
-  'access.codePlaceholder': 'ed211da1',
-  'access.demoHint': 'b5bdaefc',
+  'access.codePlaceholder': '05590b0f',
   'access.invalid': 'f556b794',
   'access.lead': 'f2f7ec9d',
   'access.privacyNote': '2b3042e9',
