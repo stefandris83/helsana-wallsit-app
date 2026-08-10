@@ -12,6 +12,13 @@
 export interface AccessCodeEntry {
   code: string;
   pilotId: string;
+  /**
+   * Zugang des Projektteams. Schaltet die Demodaten in den Einstellungen frei
+   * und wird nicht an Testpersonen ausgegeben. Datensaetze eines solchen
+   * Geraets tragen die Markierung `demo` und erscheinen im Dashboard nur bei
+   * aktivem Demodaten-Schalter.
+   */
+  team?: boolean;
 }
 
 export const accessCodes: readonly AccessCodeEntry[] = [
@@ -23,6 +30,8 @@ export const accessCodes: readonly AccessCodeEntry[] = [
   { code: 'WS-2026-L2M3', pilotId: 'P-006' },
   { code: 'WS-2026-N4P5', pilotId: 'P-007' },
   { code: 'WS-2026-Q6R7', pilotId: 'P-008' },
+  // Projektteam. Pilotnummer bewusst ausserhalb des Bereichs der Testpersonen.
+  { code: 'WS-2026-TEAM', pilotId: 'P-900', team: true },
 ] as const;
 
 function normalize(code: string): string {
@@ -32,4 +41,13 @@ function normalize(code: string): string {
 export function findAccessCode(code: string): AccessCodeEntry | null {
   const normalized = normalize(code);
   return accessCodes.find((entry) => entry.code === normalized) ?? null;
+}
+
+/**
+ * Gehoert der Code zum Projektteam? Steuert die Sichtbarkeit der Demodaten
+ * (B.10) und wird bei fehlendem oder unbekanntem Code als `false` behandelt.
+ */
+export function isTeamAccessCode(code: string | null | undefined): boolean {
+  if (!code) return false;
+  return findAccessCode(code)?.team === true;
 }

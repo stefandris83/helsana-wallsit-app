@@ -20,6 +20,18 @@ Die App laeuft anschliessend auf `http://localhost:5173`. Einstieg: Einladungsco
 Fuer den Test steht der synthetische Code **`WS-2026-A1B2`** zur Verfuegung (weitere Codes in
 `src/data/access-codes.ts`).
 
+**Team-Zugang.** Der Code **`WS-2026-TEAM`** (Pilotnummer `P-900`) ist dem Projektteam
+vorbehalten und als einziger mit `team: true` markiert. Nur er schaltet die Demodaten in den
+Einstellungen frei — Testpersonen sehen die Karte nicht und koennen ihren Datenstand damit nicht
+versehentlich durch synthetische Daten ersetzen (B.10). Datensaetze eines Team-Geraets tragen die
+Markierung `demo` und erscheinen im Dashboard nur bei aktivem Demodaten-Schalter, damit sie die
+Auswertung nicht verfaelschen. Abgesichert in `src/data/team-access.test.ts`.
+
+Der Code steht wie alle anderen im oeffentlichen Repository. Wer ihn findet, kann auf dem
+**eigenen** Geraet synthetische Daten laden — kein Zugriff auf fremde Daten, kein Zugriff auf das
+Dashboard. Echten Schutz gaebe es erst mit serverseitiger Codeverwaltung
+(siehe [`docs/schnittstellen.md`](docs/schnittstellen.md)).
+
 | Befehl | Zweck |
 |---|---|
 | `npm run dev` | Entwicklungsserver |
@@ -377,11 +389,15 @@ medizinisch freigegebene Lerninhalte».
 
 Synthetisch, ohne reale Personendaten, in `src/demo/demo-data.ts`.
 
+- **Nur mit Team-Zugang:** Die Karte erscheint ausschliesslich nach Einloesen von
+  `WS-2026-TEAM` (Abschnitt «Start»). Mit einem Testcode ist sie nicht vorhanden.
 - **Laden:** Einstellungen → Demodaten → «Demodaten laden». Danach zeigt die Kopfzeile die
   Kennzeichnung «Demodaten». Achtung: der aktuelle lokale Datenbestand wird ersetzt.
 - **Entfernen:** Einstellungen → Demodaten → «Demodaten entfernen».
 - **Im Dashboard:** unter `/admin` die Auswahl «Demodaten» aktivieren. Erst damit wird die
-  Mindestgruppengroesse von fuenf Personen erreicht und die Aggregation sichtbar.
+  Mindestgruppengroesse von fuenf Personen erreicht und die Aggregation sichtbar. Derselbe
+  Schalter blendet auch geteilte Berichte ein, die als `demo` markiert sind — etwa vom
+  Team-Geraet.
 
 ## Pilot-Dashboard
 

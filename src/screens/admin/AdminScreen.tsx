@@ -153,10 +153,15 @@ export function AdminScreen() {
   };
 
   const today = todayIso();
-  const records = useMemo(
-    () => buildPilotDataset([...(includeDemo ? demoPilotRecords() : []), ...loaded]),
-    [includeDemo, loaded],
-  );
+  const records = useMemo(() => {
+    /**
+     * Geladene Berichte eines Team-Geraets tragen die Markierung `demo`. Sie
+     * erscheinen nur bei aktivem Schalter, damit synthetische Verlaeufe die
+     * echte Auswertung nicht verfaelschen (B.10).
+     */
+    const shared = includeDemo ? loaded : loaded.filter((record) => !record.demo);
+    return buildPilotDataset([...(includeDemo ? demoPilotRecords() : []), ...shared]);
+  }, [includeDemo, loaded]);
   const metrics = useMemo(
     () => aggregate(records, filters, today, config.minGroupSize),
     [records, filters, today],

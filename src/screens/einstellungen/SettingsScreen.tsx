@@ -9,6 +9,7 @@ import { InlineNotification } from '../../components/InlineNotification';
 import { Toggle } from '../../components/Toggle';
 import { t } from '../../content/registry';
 import { overlapsTrainingTime } from '../../domain/personalization';
+import { isTeamAccessCode } from '../../data/access-codes';
 import type { ColorModePreference } from '../../data/participant';
 import { useAppStore } from '../../data/store';
 import { loadDemoState, removeDemoState } from '../../demo/demo-data';
@@ -18,6 +19,7 @@ import { notificationPermission, requestNotificationPermission } from '../../app
 export function SettingsScreen() {
   const navigate = useNavigate();
   const participant = useAppStore((state) => state.participant);
+  const identity = useAppStore((state) => state.identity);
   const setReminders = useAppStore((state) => state.setReminders);
   const setColorMode = useAppStore((state) => state.setColorMode);
   const replaceAll = useAppStore((state) => state.replaceAll);
@@ -172,6 +174,10 @@ export function SettingsScreen() {
         </div>
       </Card>
 
+      {/* Demodaten nur fuer das Projektteam (B.10): Testpersonen sollen ihren
+          eigenen Datenstand nicht versehentlich durch synthetische Daten
+          ersetzen koennen. */}
+      {isTeamAccessCode(identity?.accessCode) ? (
       <Card>
         <div className="flex flex-col gap-frog">
           <h2 className="h5">{t('settings.demo.title')}</h2>
@@ -202,6 +208,7 @@ export function SettingsScreen() {
           )}
         </div>
       </Card>
+      ) : null}
     </div>
   );
 }

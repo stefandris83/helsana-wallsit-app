@@ -77,7 +77,11 @@
       "mcp__62743d8a-a777-488d-9ddd-075983454cd7__get_advisors",
       "Bash(curl -s -o /dev/null -w '%{http_code}\\\\n' -X POST https://dooujsoadubsikihrvqw.supabase.co/auth/v1/token?grant_type=password -H 'apikey: sb_publishable_t8isCuQdd7iF_SVLVuw06Q_c1dixx7c' -H 'content-type: application/json' -d '{\"email\":\"niemand@example.invalid\",\"password\":\"falsch\"}')",
       "Bash(curl -s -X POST https://dooujsoadubsikihrvqw.supabase.co/storage/v1/object/list/berichte -H 'apikey: sb_publishable_t8isCuQdd7iF_SVLVuw06Q_c1dixx7c' -H 'authorization: Bearer sb_publishable_t8isCuQdd7iF_SVLVuw06Q_c1dixx7c' -H 'content-type: application/json' -d '{\"prefix\":\"\",\"limit\":100}')",
-      "Bash(git ls-remote *)"
+      "Bash(git ls-remote *)",
+      "Bash(/usr/bin/grep -n \"redeemAccessCode\" src/data/store.ts)",
+      "Bash(/usr/bin/grep -E \"FAIL|Tests |Test Files|AssertionError\")",
+      "Bash(/usr/bin/grep -n \"WS-2026\\\\|Zugangscode\\\\|Einladungscode\" README.md)",
+      "Bash(/usr/bin/grep -n \"Demodaten\" README.md)"
     ]
   }
 }
