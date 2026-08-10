@@ -200,6 +200,7 @@ Legende: L = Light · L-HC = Light High Contrast · D = Dark · D-HC = Dark High
 | `border` | neutral-500 | neutral-700 | neutral-500 | neutral-400 | Standardrahmen (Inputs) |
 | `border-light` | neutral-300 | neutral-300 | neutral-600 | neutral-600 | Divider, dezente Linien |
 | `border-focus` | neutral-800 | neutral-800 | neutral-100 | neutral-100 | **Fokus-Ring** |
+| `border-focus-width` | 1 px | 1 px | 1 px | 1 px | Breite des Fokus-Rings (modusunabhängig) |
 | `border-card` | neutral-300 | neutral-300 | neutral-800 | neutral-800 | Card-Rahmen |
 | `border-on-colored-bg` | neutral-100 | neutral-100 | neutral-100 | neutral-100 | Rahmen auf Brand-Fläche |
 
@@ -284,7 +285,9 @@ Gewichte: **Light = 300**, **Regular = 400**, **Bold = 700**.
 | Token | Weight | Desktop | Mobile | Hinweis |
 |---|---|---|---|---|
 | `lead` | Light 300 | 22 px / 140 % (30.8) | 20 px / 140 % (28) | Lead-/Introtext |
-| `nav` | Light 300 | 20 px / 140 % (28) | 32 px / 140 % (44.8) | nur Header-Navigation |
+| `nav` | Light 300 | 20 px / 140 % (28) | 32 px / **125 %** (40) | nur Header-Navigation |
+
+> Achtung: `nav` ist der einzige Token, dessen Mobile-Zeilenhöhe **nicht** 140 % ist. Verifiziert an `Header 2629:4395` (`Specific/nav-size: 32`, `Specific/nav-line-height: 40`).
 
 ### 4.5 Helper (Desktop & Mobile identisch)
 | Token | Weight | Size / Line-height |
@@ -397,7 +400,7 @@ Basis: `1rem = 16px`. Tokennamen sind Tiernamen (Grösse steigend).
 ### 9.1 UI-Icons
 - Basis: **Material Symbols, Style „Rounded"**, ggf. „Fill" aktiviert.
 - Grössen-Set: **16 / 24 / 32 px** (Quelle: 24 px SVG).
-- Benennung: englisch, `lowercase`, Wörter mit **Bindestrich** getrennt; States mit **doppeltem Bindestrich am Ende**, z. B. `visibility--off`.
+- Benennung: englisch, `lowercase`, Wortteile mit **Bindestrich** getrennt. Bei einigen Icons ist der State mit **doppeltem Bindestrich** abgetrennt (z. B. `visibility--off`), bei anderen mit einfachem (`visibility-off`) – die Figma-Bibliothek ist an dieser Stelle uneinheitlich. Im Code auf **eine** Schreibweise normalisieren und beim Import mappen.
 - Standardfarbe: `text-primary` (via `currentColor` / `fill`).
 - Alle Icons: gleiche optische Grösse, gleiche Strichstärke.
 - Vorhandene Icons u. a.: `add`, `add_circle`, `alert-circle`, `arrow-up/down/left/right`, `attachment`, `bar-chart`, `bill(s)`, `calendar`, `cancel-circle`, `card`, `chat`, `check-circle`, `checkmark`, `chevron-up/down/left/right`, `clock`, `close`, `cloud-offline`, `copy`, `delete`, `direction`, `document(s)`, `download`, `duplicate`, `edit`, `edit-square`, `expand`, `external_link`, `favorite`, `filter`, `fullscreen`, `fullscreen exit`, `gift`, `health`, `home`, `hourglass`, `info-circle`, `learn`, `lightbulb`, `list view`, `location`, `login`, `logout`, `loop`, `mark-as-read`, `mark-as-unread`, `menu`, `menu-book`, `message`, `minimize`, `money-in`, `more-horizontal`, `more-vertical`, `notification`, `offer`, `passkey`, `pdf`, `pendency`, `phone`, `photo-camera`, `placeholder`, `play`, `refresh`, `reload`, `replay`, `restart`, `scan(s)`, `search`, `send`, `settings`, `share ios`, `share android`, `sort`, `sort-ascending`, `sort-descending`, `sort-down`, `star`, `system-update`, `thumbs up`, `thumbs down`, `timer`, `trophy`, `upload`, `user`, `visibility`, `visibility-off`, `warning`.
@@ -472,6 +475,9 @@ Basis: `1rem = 16px`. Tokennamen sind Tiernamen (Grösse steigend).
 
   /* ===== Typography ===== */
   --font-family-base: "Akkurat Helsana", "Helvetica Neue", Arial, sans-serif;
+  /* Im Figma existieren zwei Alias-Tokens – beide zeigen auf denselben Font. */
+  --font-family-headlines: var(--font-family-base);
+  --font-family-body: var(--font-family-base);
   --font-weight-light: 300; --font-weight-regular: 400; --font-weight-bold: 700;
 
   /* ===== Spacing ===== */
@@ -535,6 +541,7 @@ Basis: `1rem = 16px`. Tokennamen sind Tiernamen (Grösse steigend).
   --border: var(--neutral-500);
   --border-light: var(--neutral-300);
   --border-focus: var(--neutral-800);
+  --border-focus-width: var(--border-width-s);
   --border-card: var(--neutral-300);
   --border-on-colored-bg: var(--neutral-100);
 
@@ -741,10 +748,10 @@ Basis: `1rem = 16px`. Tokennamen sind Tiernamen (Grösse steigend).
 .body-s-bold   { font: var(--font-weight-bold)    14px/1.4 var(--font-family-base); }
 
 .lead { font: var(--font-weight-light) 20px/1.4 var(--font-family-base); }
-.nav  { font: var(--font-weight-light) 32px/1.4 var(--font-family-base); }
+.nav  { font: var(--font-weight-light) 32px/40px var(--font-family-base); }
 @media (min-width: 768px) {
   .lead { font-size: 22px; }
-  .nav  { font-size: 20px; }
+  .nav  { font-size: 20px; line-height: 28px; }
 }
 
 .helper-m      { font: var(--font-weight-regular) 12px/1.4 var(--font-family-base); }
@@ -883,7 +890,7 @@ export default {
 | **Hilfs-Komponenten** | Mit Punkt-Präfix: `.Box`, `.Pill`, `.Menu Item`, `.Stepper/Steps`. Diese sind **intern** und werden nicht direkt platziert. |
 | **Layer & Gruppen** | Immer Auto-Layout-Frames. Übergeordnete Ebene benennt den Inhalt (`Box + Hover`), Kinder nach Funktion (`Box`, `Hover`, `Label`). Verboten: `Group 1`, `Frame 3`. |
 | **Properties** | Erster Buchstabe gross, gruppiert in `Type`, `State`, `Size`, `Platform`, `Breakpoint`, `Rounded`, `On colored bg`. |
-| **States** | Einheitlich `Default | Hover | Active | Focus | Disabled` (+ `Error` bei Formularfeldern). |
+| **States** | Einheitlich `Default` · `Hover` · `Active` · `Focus` · `Disabled` (+ `Error` bei Formularfeldern). |
 | **Booleans** | `True` / `False`. |
 | **Tokens** | Kleinschreibung, Bindestrich-getrennt, eigener Textstyle. |
 
@@ -896,10 +903,23 @@ Fast jede Komponente hat `Rounded` mit **Default `False`**. `False` ist der Web-
 
 | Komponente | Rounded = False | Rounded = True |
 |---|---|---|
-| Button, Chips/Pills | `2px` | `9999px` (Pill) |
-| Input Field, Select, Textarea, Dialog, Attachment, Date Picker | `2px` | `8px` |
-| Inline Notification, Tooltip | `2px` | `16px` |
+| Button | `2px` | `9999px` (Pill) |
+| Input Field, Select, Textarea, Dialog, Attachment | `2px` | `8px` |
+| Inline Notification, Tooltip, Date Picker | `2px` | `16px` |
 | Checkbox-Box | `2px` | `4px` |
+
+> Verifiziert an den Figma-Variablen der jeweiligen Komponente. **Pills** (`.Pill`, `Tab Pills`, `Filter Pills`) und der **Icon Button** haben *keine* `Rounded`-Property – sie sind immer `9999px`.
+
+**⚠️ Artefakte des Doku-Templates – nicht übernehmen**
+Wer selbst Werte aus dem Figma zieht, sieht Variablen, die **nicht** zum Helsana-DS gehören, sondern zum Dokumentations-Template der Datei:
+
+| Artefakt | Bedeutung | Ersatz im Code |
+|---|---|---|
+| `var(--p-border-radius-050)` | 2 | `--border-radius-2px` |
+| `var(--p-border-radius-150)` | 8 **oder** 16 – je nach Komponente | `--border-radius-8px` / `--border-radius-16px` |
+| `var(--p-border-radius-full)` | 9999 | `--border-radius-full` |
+| `Colors/specs-050`, `Colors/specs-500` | Türkistöne des Spec-Rasters | ersatzlos streichen |
+| `Specs/*`, Poppins, JetBrains Mono | Beschriftung der Spec-Seiten | ersatzlos streichen |
 
 **Focus-Ring – ein einziges Muster für alle Komponenten**
 
@@ -944,7 +964,7 @@ Entweder eigene Disabled-Tokens (`interactive-disabled #e0e0e0`, `text-disabled 
 | Text Area | **Textarea** | `668:2856` | Platform · State · Filled · Rounded |
 | Select | **Select** | `556:4271` | Platform · State · Filled · Rounded |
 | Select | Dropdown Menu | `9118:4190` | Rounded |
-| Select | `.Dropdown Menu Item` | `673:4106` | State |
+| Select | Dropdown Menu Item | `673:4106` | State |
 | Checkbox | **Checkbox** | `50:144` | State · Checked |
 | Checkbox | `.Box` | `50:60` | Checked · Status |
 | Checkbox | Checkbox-Box (Karte) | `1682:5482` | Show Title · Rounded |
@@ -985,8 +1005,11 @@ Entweder eigene Disabled-Tokens (`interactive-disabled #e0e0e0`, `text-disabled 
 | Single Select 🟠💛 | **Single Select A** | `4797:959` | Option Count · Breakpoint · Colored BG |
 | Single Select 🟠💛 | `.option` / `.optionA` | `4676:2261` / `4797:1004` | Position · State |
 | 🧩 Helper | Backdrop / Media Placeholder / Slot | `812:6482` / `703:8486` / `842:5090` | – |
+| (Loading-Indicator) 🟠 | Textarea (WIP-Duplikat) | `4983:2784` | Platform · State · Filled |
+| 🗑️ Archive | Smart Filter (abgekündigt) | `3177:2025` | – |
 
 > 🟠 / 💛 markieren Work-in-Progress-Komponenten. Nicht produktiv verwenden.
+> Die letzten beiden Zeilen komplettieren die Zahl auf **54**; sie sind bewusst **nicht** für den produktiven Einsatz vorgesehen (WIP-Duplikat bzw. Archiv).
 
 ---
 
@@ -1374,23 +1397,61 @@ font: body-s 14 / 19.6;
 
 ### 12.21 Footer `2353:1587`
 
-`Breakpoint = Desktop | Mobile`. Bausteine:
+`Breakpoint = Desktop | Mobile`.
+
+```
+Hintergrund: background-device #fff
+Trennlinien: 1px border-light #e0e0e0
+Padding:     space-dog 32px (Block) / space-donkey 40px (unten)
+Spaltenabstand: space-cat 24px, Zeilenabstand space-rat 16px
+```
+
+| Element | Typografie |
+|---|---|
+| Spaltenüberschrift | `body-m-bold` 16 / 22.4 |
+| Link | `body-m` 16 / 22.4, `text-primary #202020` |
+| Sprachumschalter | `body-s` 14 / 19.6 |
+| Rechtliche Hinweise / Copyright | `helper-m` 12 / 16.8 |
 
 | Sub-Komponente | Node-ID | Inhalt |
 |---|---|---|
 | `.Legal Links` | `2351:1977` | Impressum, Datenschutz, optional Nutzungsbestimmungen |
-| `.Language Switch` / `.Language Item` | `2351:1812` / `2359:8018` | DE / FR / IT / EN, `State = Default | Active` |
+| `.Language Switch` / `.Language Item` | `2351:1812` / `2359:8018` | DE / FR / IT / EN, `State = Default` · `Active` |
 | `.Social Icons` | `2351:1815` | Social-Media-Icon-Reihe |
 
 ---
 
-### 12.22 Weitere Komponenten
+### 12.22 Date Picker `3022:1704`
+
+```
+background: background-card #fff;
+border: 1px solid border-card #e0e0e0;
+border-radius: 2px (Rounded=True → 16px);
+box-shadow: var(--shadow-l, 0 4px 32px -8px rgba(0,0,0,.16));   /* nur Type=Popover */
+padding/gap: space-frog 12px · space-rat 16px · space-chicken 20px · space-cat 24px
+```
+
+| Element | Typografie / Stil |
+|---|---|
+| Monats-/Jahrestitel | `Headlines/h5` 20 / 27, Bold |
+| Wochentagskürzel | `body-s-bold` 14 / 19.6, `text-tertiary #949494` |
+| Tageszahl | `body-l` 18 / 25.2 · ausgewählt `body-l-bold` |
+| `.Picker Item` `3020:266` | Kreis `border-radius: 9999px`; States `Default` · `Hover` · `Selected` · `Current` · `Disabled` · `Null` |
+| Selected | `background: interactive-primary #9a0941`, `color: text-on-interactive-primary #fff` |
+| Current | Rahmen in `text-nav-selected #9a0941` |
+| Disabled | `text-disabled #b2b2b2` |
+| `.Week` `3020:363` | Zeilen-Wrapper (7 Picker Items) |
+
+`Type = Inline` · `Popover` — `View = Day` · `Month` · `Year` — `Rounded = False` · `True`
+
+---
+
+### 12.23 Weitere Komponenten
 
 | Komponente | Node-ID | Kurzspezifikation |
 |---|---|---|
-| **Date Picker** | `3022:1704` | `Type = Inline | Popover`, `View = Day | Month | Year`, `Rounded`. `.Picker Item 3020:266` mit `Default | Hover | Selected | Current | Disabled | Null`; `.Week 3020:363` als Zeilen-Wrapper. |
-| **Form Attachment** | `668:3705` | Upload-Feld, `State = Default | Active/Focus | Error (Field) | Error (Attachment) | Disabled`, `Buttons = 1 | 2`. Infotext: „Sie können bis zu 6 JPG- oder PDF-Dateien (max. 10 MB) hochladen." |
-| **Attachment** | `1068:1350` | Datei-Chip: Dateiname + Grösse, Leading-Icon, Error-Text, `Rounded`. |
+| **Form Attachment** | `668:3705` | Upload-Feld. `State = Default` · `Active/Focus` · `Error (Field)` · `Error (Attachment)` · `Disabled`; `Buttons = 1` · `2`. Infotext: „Sie können bis zu 6 JPG- oder PDF-Dateien (max. 10 MB) hochladen." |
+| **Attachment** | `1068:1350` | Datei-Chip: `background-medium-neutral #f2f2f2`, Radius 2px (Rounded=True → 8px), Padding `space-rat 16px`, gap `space-snail 8px`. Dateiname `body-m`, Grösse `body-m-bold`. Fehlerzustand: `status-light-bg-error #ffe4e1` + `status-text-error-on-light-bg #7e1205`. Disabled `text-disabled #b2b2b2`. |
 | **Bottom-Up-Sheet** | `13600:1764` | Mobile-Sheet mit Backdrop. |
 | **Checkbox-Box** | `1682:5482` | Auswahlkarte mit Checkbox, `Show Title`, `Rounded` (2 / 4px). |
 | **Single Select / Single Select A** | `4676:2353` / `4797:959` | Segmented Control, 2–8 Optionen. 🟠 WIP – noch nicht produktiv nutzen. |
@@ -1399,7 +1460,7 @@ font: body-s 14 / 19.6;
 
 ---
 
-### 12.23 CSS-Referenzimplementierung
+### 12.24 CSS-Referenzimplementierung
 
 ```css
 /* ---------- Button ---------- */
@@ -1497,7 +1558,7 @@ font: body-s 14 / 19.6;
 
 ---
 
-### 12.24 Implementierungs-Checkliste pro Komponente
+### 12.25 Implementierungs-Checkliste pro Komponente
 
 - [ ] Alle States abgebildet: `Default | Hover | Active | Focus | Disabled` (+ `Error`)
 - [ ] Focus ausschliesslich über `:focus-visible`, Ring `1px #202020`, Offset 5px
@@ -1513,12 +1574,17 @@ font: body-s 14 / 19.6;
 
 ## 13. Accessibility
 
-- Fokus ist **immer sichtbar**: `border-focus` (Light = `neutral-800`, Dark = `neutral-100`), 2 px Outline + 2 px Offset.
+- Fokus ist **immer sichtbar** und folgt genau **einem** Muster (siehe 12.2):
+  `outline: var(--border-focus-width, 1px) solid var(--border-focus)` mit `outline-offset: 5px`.
+  `border-focus` ist Light = `neutral-800 #202020`, Dark = `neutral-100 #F8F8F8` – **nie** Markenmagenta.
+- Fokus nur über `:focus-visible` ausspielen, nie über `:focus` (sonst erscheint der Ring auch bei Mausklick).
+- `outline: none` ohne gleichwertigen Ersatz ist verboten.
 - `text-tertiary` ist **nur für Placeholder** zulässig – nicht für Fliesstext.
-- Für WCAG-AAA-Anforderungen die `-hc`-Modi aktivieren (`data-color-mode="light-hc" | "dark-hc"`).
+- Für WCAG-AAA-Anforderungen die `-hc`-Modi aktivieren (`data-color-mode="light-hc"` bzw. `"dark-hc"`).
 - Statusfarben nie als alleiniger Bedeutungsträger – immer Icon + Text.
-- Touch-Targets min. 44 × 44 px (`space-donkey` + Padding).
+- Touch-Targets min. **44 × 44 px**. Der Icon Button ist exakt 44 px, der Button 56 px. Bei kleineren Zielen die Fläche per Padding oder Pseudo-Element vergrössern.
 - Zeilenlänge: bei > ~75 Zeichen `body-m-copy` (150 % Line-height) statt `body-m` verwenden.
+- Disabled-Elemente aus der Tab-Reihenfolge nehmen; `aria-disabled` nur, wenn das Element fokussierbar bleiben soll.
 
 ---
 
@@ -1526,11 +1592,13 @@ font: body-s 14 / 19.6;
 
 - [ ] Keine Hex-Codes im Komponenten-Code – nur Semantic Tokens
 - [ ] Keine Primitive-Tokens (`brand-500`, `neutral-300`, …) direkt im UI
+- [ ] Keine Doku-Template-Artefakte übernommen (`--p-border-radius-*`, `Colors/specs-*`) – siehe 12.2
 - [ ] Alle Abstände aus der Tier-Skala
-- [ ] Radius: 2 px Default / 4 px Cards / `full` nur für Pills & Avatare
-- [ ] Nur `Akkurat Helsana` mit 300/400/700
+- [ ] Radius: 2 px Default / 4 px Cards / `full` nur für Pills & Avatare; `Rounded=True` nur bewusst gesetzt
+- [ ] Nur `Akkurat Helsana` mit 300/400/700 – keine 500/600/800
 - [ ] Light **und** Dark Mode geprüft
-- [ ] Fokus-States sichtbar und getestet (Tastatur)
+- [ ] Fokus-States sichtbar und getestet (Tastatur): 1 px `border-focus`, Offset 5 px, `:focus-visible`
+- [ ] Button-Höhe 56 px (Large) bzw. 40 px (Small) – auch bei Secondary mit 2/4 px Border
 - [ ] Icons als Material Symbols **Rounded**, 16/24/32 px
 - [ ] Offizielles Logo-SVG, kein Text-Nachbau
 - [ ] Container-Paddings 16 / 32 / 40 px je Breakpoint, Gutter 16 px
@@ -1586,6 +1654,10 @@ fileKey: `FdDnzKBAvua0vvJr4AY6Lf`
 | Bottom Sheet | `769:7181` |
 | Single Select 🟠💛 | `2517:517` |
 | 🧩 Helper Components | `806:6312` |
+| (Loading-Indicator) 🟠 | `3905:1447` |
+| 🗑️ Archive | `873:7771` |
+
+> Die letzten beiden Pages enthalten WIP- bzw. abgekündigte Komponenten und sind **nicht** produktiv zu verwenden.
 
 > Die Node-IDs der einzelnen Komponenten stehen in Kapitel 12.3.
 > Schnellster Einstieg per MCP: `list_file_components_for_code_connect` mit dem fileKey liefert alle 54 Komponenten inkl. Node-IDs und Varianten-Properties.

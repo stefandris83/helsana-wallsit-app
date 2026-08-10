@@ -163,7 +163,7 @@
 .u-input::placeholder {
   color: var(--text-tertiary);
 }
-.u-input:focus {
+.u-input:focus-visible {
   border-width: var(--border-width-m);
   border-color: var(--border-focus);
   outline: none;

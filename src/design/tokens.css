@@ -121,6 +121,9 @@
 
   /* ===== Typography ===== */
   --font-family-base: 'Akkurat Helsana', 'Helvetica Neue', Arial, sans-serif;
+  /* Im Figma existieren zwei Alias-Tokens - beide zeigen auf denselben Font. */
+  --font-family-headlines: var(--font-family-base);
+  --font-family-body: var(--font-family-base);
   --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-bold: 700;
@@ -506,7 +509,7 @@
   font: var(--font-weight-light) 20px / 1.4 var(--font-family-base);
 }
 .nav {
-  font: var(--font-weight-light) 32px / 1.4 var(--font-family-base);
+  font: var(--font-weight-light) 32px / 40px var(--font-family-base);
 }
 @media (min-width: 768px) {
   .lead {
@@ -514,6 +517,7 @@
   }
   .nav {
     font-size: 20px;
+    line-height: 28px;
   }
 }
 
