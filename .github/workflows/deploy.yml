@@ -42,7 +42,9 @@ jobs:
           # der Wert wird in das ausgelieferte JavaScript kompiliert und ist damit
           # fuer jede Besucherin und jeden Besucher lesbar (siehe README).
           VITE_ADMIN_CODE: ${{ secrets.VITE_ADMIN_CODE || 'pilot-admin-demo' }}
-          VITE_FEATURE_SKIP_REST: 'false'
+          # Feature-Flag «Pause ueberspringen» (B.13.5). Freigegeben durch den
+          # Auftraggeber am 11.08.2026; siehe README, Abschnitt «Vorentscheide».
+          VITE_FEATURE_SKIP_REST: 'true'
           VITE_MIN_GROUP_SIZE: '5'
           # Ablageordner fuer freiwillig geteilte Ergebnisberichte.
           # Diese beiden Werte sind bewusst keine Secrets: der Schluessel darf

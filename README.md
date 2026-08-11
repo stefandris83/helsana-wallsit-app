@@ -56,7 +56,7 @@ Im Repository liegen keine Secrets.
 | `VITE_ADMIN_CODE` | Zugangscode fuer `/admin` | leer |
 | `VITE_INSTRUCTION_VIDEO_URL` | Anleitungsvideo (§17) | leer, Platzhalter |
 | `VITE_INSTRUCTION_VIDEO_TRACK_URL` | Untertitelspur | leer |
-| `VITE_FEATURE_SKIP_REST` | Feature-Flag «Pause ueberspringen» — **freigabepflichtig** | `false` |
+| `VITE_FEATURE_SKIP_REST` | Feature-Flag «Pause ueberspringen» — freigegeben am 11.08.2026 | `false` (Live-Deploy: `true`) |
 | `VITE_MIN_GROUP_SIZE` | Mindestgruppengroesse im Dashboard | `5` |
 | `VITE_REPORT_UPLOAD_URL` | Ablageordner fuer geteilte Ergebnisberichte | leer, Funktion ausgeblendet |
 | `VITE_REPORT_UPLOAD_KEY` | Oeffentlicher Schluessel dazu, **nur Schreibrecht** | leer, Funktion ausgeblendet |
@@ -461,8 +461,10 @@ Woche 12 zu kurz waere. «Zwischenziel erreicht» ist derselbe Erfolgsmassstab w
    erscheint ein ruhiger Hinweis; betroffen sind nur optionale Medien.
 4. **Anleitungsvideo:** Komponente mit konfigurierbarer Quelle, Slot fuer Untertitel und
    vollstaendiger Textalternative. Standard ist ein klar gekennzeichneter Platzhalter.
-5. **Pause ueberspringen:** hinter `VITE_FEATURE_SKIP_REST`, standardmaessig aus.
-   **Freigabepflichtig durch Medical.**
+5. **Pause ueberspringen:** hinter `VITE_FEATURE_SKIP_REST`, im Code standardmaessig aus.
+   *Freigegeben durch den Auftraggeber am 11.08.2026:* im Deploy-Workflow auf `true`
+   gesetzt, die Schaltflaeche erscheint damit in der Live-Version waehrend der Pause.
+   Die Vorgabe fuer neue Umgebungen bleibt `false` (`.env.example`).
 6. **Blutdruckexport:** Die Person exportiert ihre eigenen Rohdaten als CSV. Der
    Standard-Pilotexport enthaelt nur die Anzahl der Eintraege.
 7. **Mindestgruppengroesse:** fuenf, konfigurierbar ueber `VITE_MIN_GROUP_SIZE`.
