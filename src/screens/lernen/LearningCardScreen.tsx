@@ -4,7 +4,7 @@ import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { CheckList } from '../../components/CheckList';
 import { InlineNotification } from '../../components/InlineNotification';
-import { contentEntry, t, tField, tFieldOptional, tList } from '../../content/registry';
+import { t, tField, tFieldOptional, tList } from '../../content/registry';
 import { learningCardContentIds, learningCardStepIds } from '../../content/mappings';
 import type { LearningCardId } from '../../content/learning-cards';
 import { learningCardIds } from '../../content/learning-cards';
@@ -37,7 +37,6 @@ export function LearningCardScreen() {
   }
 
   const contentId = learningCardContentIds[cardId];
-  const entry = contentEntry(contentId);
   const stepsId = learningCardStepIds[cardId];
   const safety = tFieldOptional(contentId, 'safety');
 
@@ -79,17 +78,12 @@ export function LearningCardScreen() {
       {safety ? (
         <InlineNotification
           type="neutral"
+          icon="shield-check"
           title={t('learning.safety')}
           iconLabel={t('learning.safety')}
         >
           {safety}
         </InlineNotification>
-      ) : null}
-
-      {entry.source ? (
-        <p className="helper-m text-secondary">
-          {t('learning.sourceLabel')}: {entry.source}
-        </p>
       ) : null}
 
       <p className="helper-m text-secondary">{t('learning.disclaimer')}</p>

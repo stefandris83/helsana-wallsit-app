@@ -110,7 +110,6 @@ export const learningCardContent = defineContent({
   'learning.keyMessages': { owner: 'marketing', text: 'Kernbotschaften' },
   'learning.tip': { owner: 'marketing', text: 'Tipp für den Alltag' },
   'learning.safety': { owner: 'medical', text: 'Wichtiger Sicherheitshinweis' },
-  'learning.sourceLabel': { owner: 'marketing', text: 'Quelle' },
   'learning.readBadge': { owner: 'marketing', text: 'Gelesen' },
   'learning.back': { owner: 'marketing', text: 'Zurück zur Übersicht' },
   'learning.orderNote': {

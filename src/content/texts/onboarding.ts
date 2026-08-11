@@ -224,8 +224,15 @@ export const onboardingQuestionnaireContent = defineContent({
   },
   'questionnaire.q6.hint': { owner: 'product', text: 'Maximal zwei Antworten.' },
   'questionnaire.q6.time': { owner: 'product', text: 'Ich habe zu wenig Zeit' },
-  'questionnaire.q6.forget': { owner: 'product', text: 'Ich vergesse es häufig' },
+  'questionnaire.q6.routine': {
+    owner: 'product',
+    text: 'Ich bekomme Bewegung schwer in meinen Alltag integriert',
+  },
   'questionnaire.q6.motivation': { owner: 'product', text: 'Mir fehlt oft die Motivation' },
+  'questionnaire.q6.enjoyment': {
+    owner: 'product',
+    text: 'Mir macht Bewegung oft zu wenig Freude',
+  },
   'questionnaire.q6.tired': { owner: 'product', text: 'Ich bin häufig müde oder gestresst' },
   'questionnaire.q6.physical': { owner: 'product', text: 'Ich habe körperliche Beschwerden' },
   'questionnaire.q6.howToStart': {
@@ -237,11 +244,15 @@ export const onboardingQuestionnaireContent = defineContent({
     owner: 'product',
     text: 'Was hilft Ihnen am meisten, das Programm durchzuziehen?',
   },
-  'questionnaire.q7.feedback': { owner: 'product', text: 'Motivierende Rückmeldungen' },
+  'questionnaire.q7.personalGoal': {
+    owner: 'product',
+    text: 'Ein persönliches Ziel, das mich motiviert',
+  },
   'questionnaire.q7.plan': { owner: 'product', text: 'Ein klarer Plan' },
   'questionnaire.q7.reminders': { owner: 'product', text: 'Erinnerungen und Struktur' },
-  'questionnaire.q7.knowledge': { owner: 'product', text: 'Kurze Gesundheitsinformationen' },
+  'questionnaire.q7.feedback': { owner: 'product', text: 'Motivierende Rückmeldungen' },
   'questionnaire.q7.progress': { owner: 'product', text: 'Sichtbarer Fortschritt' },
+  'questionnaire.q7.knowledge': { owner: 'product', text: 'Kurze Gesundheitsinformationen' },
 
   'questionnaire.q8.title': {
     owner: 'product',

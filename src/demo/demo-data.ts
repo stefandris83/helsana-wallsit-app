@@ -136,7 +136,7 @@ const demoQuestionnaire: Questionnaire = {
   trainingDays: ['mon', 'wed', 'fri'],
   preferredDaytime: 'evening',
   preciseTimes: null,
-  barriers: ['time', 'forget'],
+  barriers: ['time', 'routine'],
   support: 'plan',
   confidence: 7,
   remindersWanted: true,
@@ -441,7 +441,7 @@ const recordSpecs: DemoRecordSpec[] = [
     questionnaire: {
       ...demoQuestionnaire,
       activityLevel: 'one-to-two',
-      barriers: ['forget'],
+      barriers: ['routine'],
       support: 'reminders',
       confidence: 6,
     },

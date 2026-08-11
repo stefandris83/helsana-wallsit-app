@@ -27,6 +27,8 @@ export interface InlineNotificationProps {
   children: ReactNode;
   /** Beschriftung des Icons — immer Icon plus Text (Kapitel 13). */
   iconLabel: string;
+  /** Icon-Override fuer Faelle, in denen das Standard-Icon des Typs nicht passt. */
+  icon?: IconName;
 }
 
 export function InlineNotification({
@@ -34,12 +36,13 @@ export function InlineNotification({
   title,
   children,
   iconLabel,
+  icon,
 }: InlineNotificationProps) {
   const role = type === 'error' || type === 'warning' ? 'alert' : 'status';
   return (
     <div className={`u-notification u-notification--${type}`} role={role}>
       <span className="shrink-0">
-        <Icon name={icons[type]} size={24} label={iconLabel} />
+        <Icon name={icon ?? icons[type]} size={24} label={iconLabel} />
       </span>
       <div className="flex flex-col gap-bee">
         {title ? <p className="body-m-bold">{title}</p> : null}

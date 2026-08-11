@@ -43,8 +43,21 @@ export type ActivityLevel = 'rarely' | 'one-to-two' | 'three-to-four' | 'five-pl
 export type WallsitExperience = 'never' | 'tried' | 'regular';
 export type ComplaintLevel = 'none' | 'mild' | 'strong' | 'unsure';
 export type PreferredDaytime = 'morning' | 'midday' | 'evening' | 'varies';
-export type Barrier = 'time' | 'forget' | 'motivation' | 'tired' | 'physical' | 'how-to-start';
-export type SupportPreference = 'feedback' | 'plan' | 'reminders' | 'knowledge' | 'progress';
+export type Barrier =
+  | 'time'
+  | 'routine'
+  | 'motivation'
+  | 'enjoyment'
+  | 'tired'
+  | 'physical'
+  | 'how-to-start';
+export type SupportPreference =
+  | 'personal-goal'
+  | 'plan'
+  | 'reminders'
+  | 'feedback'
+  | 'progress'
+  | 'knowledge';
 
 export interface Questionnaire {
   activityLevel: ActivityLevel;

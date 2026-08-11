@@ -373,7 +373,15 @@ export function QuestionnaireScreen() {
               maxSelected={2}
               onChange={(values) => update({ barriers: values })}
               options={(
-                ['time', 'forget', 'motivation', 'tired', 'physical', 'how-to-start'] as Barrier[]
+                [
+                  'time',
+                  'routine',
+                  'motivation',
+                  'enjoyment',
+                  'tired',
+                  'physical',
+                  'how-to-start',
+                ] as Barrier[]
               ).map((value) => ({ value, label: t(barrierLabels[value]) }))}
             />
           </Card>
@@ -384,7 +392,14 @@ export function QuestionnaireScreen() {
               value={draft.support}
               onChange={(value) => update({ support: value })}
               options={(
-                ['feedback', 'plan', 'reminders', 'knowledge', 'progress'] as SupportPreference[]
+                [
+                  'personal-goal',
+                  'plan',
+                  'reminders',
+                  'feedback',
+                  'progress',
+                  'knowledge',
+                ] as SupportPreference[]
               ).map((value) => ({ value, label: t(supportLabels[value]) }))}
             />
           </Card>

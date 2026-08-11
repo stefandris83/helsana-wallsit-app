@@ -44,8 +44,17 @@ describe('Reihenfolge der Lernkarten (§22)', () => {
   });
 
   it('enthaelt in jedem Fall alle Karten genau einmal', () => {
-    const barriers: Barrier[] = ['time', 'forget', 'motivation', 'tired', 'physical', 'how-to-start'];
+    const barriers: Barrier[] = [
+      'time',
+      'routine',
+      'motivation',
+      'enjoyment',
+      'tired',
+      'physical',
+      'how-to-start',
+    ];
     const supports: SupportPreference[] = [
+      'personal-goal',
       'feedback',
       'plan',
       'reminders',

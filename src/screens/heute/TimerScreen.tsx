@@ -8,6 +8,7 @@ import { Icon } from '../../components/Icon';
 import { InlineNotification } from '../../components/InlineNotification';
 import { LiveRegion } from '../../components/LiveRegion';
 import { ProgressRing } from '../../components/ProgressRing';
+import { WandsitzFigure } from '../../components/WandsitzFigure';
 import { config } from '../../app/config';
 import { t } from '../../content/registry';
 import { variantLabels } from '../../content/mappings';
@@ -31,6 +32,7 @@ interface PreviousView {
 export function TimerScreen() {
   const navigate = useNavigate();
   const activeSession = useAppStore((state) => state.activeSession);
+  const participant = useAppStore((state) => state.participant);
   const tickTimer = useAppStore((state) => state.tickTimer);
   const pauseSession = useAppStore((state) => state.pauseSession);
   const resumeSession = useAppStore((state) => state.resumeSession);
@@ -126,9 +128,12 @@ export function TimerScreen() {
     <div className="flex flex-col gap-cat">
       <LiveRegion message={announcement} />
 
-      <div className="flex flex-col gap-bee">
-        <h1 className="h2">{phaseLabel}</h1>
-        <p className="body-s text-secondary">{t(variantLabels[activeSession.variant])}</p>
+      <div className="flex items-start justify-between gap-rat">
+        <div className="flex flex-col gap-bee">
+          <h1 className="h2">{phaseLabel}</h1>
+          <p className="body-s text-secondary">{t(variantLabels[activeSession.variant])}</p>
+        </div>
+        <WandsitzFigure sex={participant.profile?.sex ?? 'unspecified'} />
       </div>
 
       <Dialog

@@ -104,13 +104,17 @@ export const todayContent = defineContent({
     owner: 'marketing',
     text: 'Die heutige Einheit ist kurz und bereits eingeplant.',
   },
-  'motivation.barrier.forget': {
+  'motivation.barrier.routine': {
     owner: 'marketing',
-    text: 'Ihre nächste Einheit steht fest. Eine Erinnerung hilft, den Termin nicht zu verpassen.',
+    text: 'Ein fester Zeitpunkt im Alltag hilft, die Einheit nicht ausfallen zu lassen.',
   },
   'motivation.barrier.motivation': {
     owner: 'marketing',
     text: 'Sie müssen nicht perfekt sein. Entscheidend ist der nächste kleine Schritt.',
+  },
+  'motivation.barrier.enjoyment': {
+    owner: 'marketing',
+    text: 'Die Einheit dauert nur wenige Minuten und ist schnell wieder vorbei.',
   },
   'motivation.barrier.tired': {
     owner: 'marketing',

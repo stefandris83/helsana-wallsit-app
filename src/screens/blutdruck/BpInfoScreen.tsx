@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { CheckList } from '../../components/CheckList';
-import { contentEntry, t, tList } from '../../content/registry';
+import { t, tList } from '../../content/registry';
 
 /**
  * Statische Informationskarte zur Messung (§23 «Messinformationen»).
@@ -10,7 +10,6 @@ import { contentEntry, t, tList } from '../../content/registry';
  */
 export function BpInfoScreen() {
   const navigate = useNavigate();
-  const entry = contentEntry('bpInfo.items');
 
   return (
     <div className="flex flex-col gap-cat">
@@ -30,12 +29,6 @@ export function BpInfoScreen() {
           <p className="body-s text-secondary">{t('bpInfo.measurementWeekNote')}</p>
         </div>
       </Card>
-
-      {entry.source ? (
-        <p className="helper-m text-secondary">
-          {t('learning.sourceLabel')}: {entry.source}
-        </p>
-      ) : null}
 
       <Button variant="secondary" block onClick={() => navigate('/blutdruck')}>
         {t('action.back')}

@@ -14,8 +14,9 @@ import type { Barrier, ClockTime, PreferredDaytime, Profile, Questionnaire } fro
 export type MotivationKey =
   | 'default'
   | 'barrier-time'
-  | 'barrier-forget'
+  | 'barrier-routine'
   | 'barrier-motivation'
+  | 'barrier-enjoyment'
   | 'barrier-tired'
   | 'barrier-physical'
   | 'barrier-how-to-start'
@@ -47,8 +48,9 @@ const HIGH_CONFIDENCE_MIN = 8;
 
 const barrierMotivation: Record<Barrier, MotivationKey> = {
   time: 'barrier-time',
-  forget: 'barrier-forget',
+  routine: 'barrier-routine',
   motivation: 'barrier-motivation',
+  enjoyment: 'barrier-enjoyment',
   tired: 'barrier-tired',
   physical: 'barrier-physical',
   'how-to-start': 'barrier-how-to-start',
@@ -126,8 +128,9 @@ function topicWeights(
 
 const barrierTopics: Record<Barrier, ReadonlyArray<LearningTopic>> = {
   time: ['kurze-routinen', 'sofort-wirkung'],
-  forget: ['kurze-routinen'],
+  routine: ['kurze-routinen'],
   motivation: ['sofort-wirkung', 'erholung'],
+  enjoyment: ['bewegung', 'sofort-wirkung'],
   tired: ['schlaf', 'erholung'],
   physical: ['einstieg', 'sicherheit'],
   'how-to-start': ['einstieg', 'kraft'],
@@ -201,9 +204,9 @@ export function personalize(
     motivation,
     highlightLearningCard: questionnaire.support === 'knowledge',
     emphasizeNextSession:
-      questionnaire.support === 'plan' || questionnaire.barriers.includes('forget'),
+      questionnaire.support === 'plan' || questionnaire.barriers.includes('routine'),
     emphasizeReminders:
-      questionnaire.support === 'reminders' || questionnaire.barriers.includes('forget'),
+      questionnaire.support === 'reminders' || questionnaire.barriers.includes('routine'),
     emphasizeSmallSteps: questionnaire.confidence <= LOW_CONFIDENCE_MAX,
   };
 }

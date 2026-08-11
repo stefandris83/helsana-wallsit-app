@@ -97,19 +97,21 @@ export const complaintLevelLabels: Record<ComplaintLevel, ContentId> = {
 
 export const barrierLabels: Record<Barrier, ContentId> = {
   time: 'questionnaire.q6.time',
-  forget: 'questionnaire.q6.forget',
+  routine: 'questionnaire.q6.routine',
   motivation: 'questionnaire.q6.motivation',
+  enjoyment: 'questionnaire.q6.enjoyment',
   tired: 'questionnaire.q6.tired',
   physical: 'questionnaire.q6.physical',
   'how-to-start': 'questionnaire.q6.howToStart',
 };
 
 export const supportLabels: Record<SupportPreference, ContentId> = {
-  feedback: 'questionnaire.q7.feedback',
+  'personal-goal': 'questionnaire.q7.personalGoal',
   plan: 'questionnaire.q7.plan',
   reminders: 'questionnaire.q7.reminders',
-  knowledge: 'questionnaire.q7.knowledge',
+  feedback: 'questionnaire.q7.feedback',
   progress: 'questionnaire.q7.progress',
+  knowledge: 'questionnaire.q7.knowledge',
 };
 
 export const moodLabels: Record<CheckinMood, ContentId> = {
@@ -162,8 +164,9 @@ export const daypartLabels: Record<BpDaypart, ContentId> = {
 export const motivationLabels: Record<MotivationKey, ContentId> = {
   default: 'motivation.default',
   'barrier-time': 'motivation.barrier.time',
-  'barrier-forget': 'motivation.barrier.forget',
+  'barrier-routine': 'motivation.barrier.routine',
   'barrier-motivation': 'motivation.barrier.motivation',
+  'barrier-enjoyment': 'motivation.barrier.enjoyment',
   'barrier-tired': 'motivation.barrier.tired',
   'barrier-physical': 'motivation.barrier.physical',
   'barrier-how-to-start': 'motivation.barrier.howToStart',
