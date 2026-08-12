@@ -54,7 +54,7 @@ Im Repository liegen keine Secrets.
 | Variable | Bedeutung | Standard |
 |---|---|---|
 | `VITE_ADMIN_CODE` | Zugangscode fuer `/admin` | leer |
-| `VITE_INSTRUCTION_VIDEO_URL` | Anleitungsvideo (§17) | leer, Platzhalter |
+| `VITE_INSTRUCTION_VIDEO_URL` | Anleitungsvideo (§17) | leer, Platzhalter (Live-Deploy: Physitrack-Quelle) |
 | `VITE_INSTRUCTION_VIDEO_TRACK_URL` | Untertitelspur | leer |
 | `VITE_FEATURE_SKIP_REST` | Feature-Flag «Pause ueberspringen» — freigegeben am 11.08.2026 | `false` (Live-Deploy: `true`) |
 | `VITE_MIN_GROUP_SIZE` | Mindestgruppengroesse im Dashboard | `5` |
@@ -627,13 +627,19 @@ Die visuelle Umsetzung folgt `design-system.md`.
   durch ein offizielles App-Icon ersetzen.**
 - **Illustrationen der Anleitung**: schlichte SVGs aus Semantic Tokens und als Platzhalter
   gekennzeichnet.
-- **Anleitungsvideo**: Der produktive Standard bleibt der gekennzeichnete Platzhalter
+- **Anleitungsvideo**: Im Code bleibt der Standard der gekennzeichnete Platzhalter
   (`VITE_INSTRUCTION_VIDEO_URL` leer, siehe «Konfiguration»); `.env.example` aendert sich nicht.
-  Fuer eine erste lokale Demo hat der Auftraggeber am 02.08.2026 die Verwendung eines externen
-  Physitrack-Uebungsvideos freigegeben
+  *Freigegeben durch den Auftraggeber am 12.08.2026:* Der Deploy-Workflow setzt die Quelle, das
+  Video ist damit auch in der Live-Version sichtbar. Der Abruf erfolgt aus dem Browser der
+  Testperson direkt bei Physitrack (Auslieferung ueber AWS CloudFront); dabei werden IP-Adresse
+  und User-Agent an den Drittanbieter uebermittelt. **Das ist im Datenschutzhinweis noch nicht
+  abgebildet und vor dem Kundenpilot zu ergaenzen** (siehe `docs/schnittstellen.md`).
+  Urspruenglich hatte der Auftraggeber am 02.08.2026 die Verwendung desselben externen
+  Physitrack-Uebungsvideos fuer eine erste lokale Demo freigegeben
   (`https://media.physitrack.com/exercises/78c2dfb7-ca1e-4bb4-9c83-aeb2881edb5a/en/video_1280x720.mp4`).
-  Die URL ist ausschliesslich in der nicht versionierten `.env.local` hinterlegt und wird per
-  `<video src>` referenziert, nicht heruntergeladen oder im Repository gespeichert. Es handelt
+  Die URL steht lokal in der nicht versionierten `.env.local` und fuer die Live-Version im
+  Deploy-Workflow (ueber die Repository-Variable `INSTRUCTION_VIDEO_URL` ueberschreibbar). Sie
+  wird per `<video src>` referenziert, nicht heruntergeladen oder im Repository gespeichert. Es handelt
   sich um ein generisches Drittanbieter-Uebungsvideo (nicht Helsana-Branding, keine
   Untertitelspur) fuer die Erstansicht der Demo; **vor dem Kundenpilot ist ein eigenes,
   medizinisch abgenommenes Anleitungsvideo bereitzustellen.**

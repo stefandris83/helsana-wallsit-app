@@ -15,7 +15,7 @@ von dem, was **erst beim Betrieb** greift (spec.md §30).
 | Loeschkonzept | `deleteAllData()` entfernt Identitaet, Nutzungsdaten, Ereignis-Log, Blutdruckdaten, Timerzustand und Admin-Log. Zusaetzlich selektives Loeschen der Blutdruckeintraege. |
 | Schutz vor unberechtigtem Export | Der Rohdatenexport ist auf die eigene Person begrenzt; der Pilotexport enthaelt keine Werte. Ein Export medizinisch sensibler Rohdaten ist bewusst nicht implementiert. |
 | Automatische Uebermittlung | `src/data/auto-sync.ts`: ein Einhaengepunkt am Store, Entprellung, Nachholen nach Fehlschlag. Der Bericht entsteht aus `PilotParticipantRecord`, wird um Profilangaben und Freitextnotizen reduziert; Blutdruckwerte nur bei erteilter Einwilligung. Gegenprobe beim Einlesen in `src/data/report-import.ts`. |
-| Keine Drittanbieter-Tracker | Keine Analytics-Bibliothek, keine externen CDN, keine Schriftdateien von Dritten. |
+| Keine Drittanbieter-Tracker | Keine Analytics-Bibliothek, keine Schriftdateien von Dritten, keine Skripte von externen CDN. **Ausnahme seit 12.08.2026:** das Anleitungsvideo wird als `<video src>` direkt bei Physitrack abgerufen (Auslieferung ueber AWS CloudFront). Dabei erhaelt der Drittanbieter IP-Adresse und User-Agent der Testperson. Kein Skript, kein Cookie, keine Auswertung — aber eine Verbindung zu einem Dritten, die im Datenschutzhinweis noch fehlt (siehe Abschnitt 2). |
 | Keine Weitergabe an generative KI-Dienste | Keine KI-Abhaengigkeit im Projekt. |
 | Keine echten Kundendaten | Demodaten sind synthetisch und als solche gekennzeichnet (`src/demo/demo-data.ts`). |
 | Sichere Behandlung von Zugangscodes | Codes werden nur lokal gegen eine synthetische Liste geprueft; der Code erscheint nie im Export. |
@@ -31,7 +31,7 @@ von dem, was **erst beim Betrieb** greift (spec.md §30).
 | Aufbewahrungskonzept | Serverseitige Loeschfristen je Datenkategorie. Im MVP nicht abbildbar, da keine zentrale Ablage existiert. |
 | Codeverwaltung | `src/data/access-codes.ts` wird durch einen serverseitig verwalteten Bestand ersetzt; die Zuordnung Code zu Pilot-ID erfolgt dann ausserhalb des Clients. |
 | Erinnerungen | Kein Push-Backend und kein Service Worker (B.13.2). Produktiv waere ein Push-Dienst mit eigener Einwilligung noetig. |
-| Anleitungsvideo | `VITE_INSTRUCTION_VIDEO_URL` und `VITE_INSTRUCTION_VIDEO_TRACK_URL`. Standard ist ein Platzhalter; die Datei wird lokal ausgeliefert, nicht von einem externen CDN. |
+| Anleitungsvideo | `VITE_INSTRUCTION_VIDEO_URL` und `VITE_INSTRUCTION_VIDEO_TRACK_URL`. Im Code ist der Standard ein Platzhalter. Seit dem 12.08.2026 setzt der Deploy-Workflow eine externe Physitrack-Quelle (Abschnitt 1, Zeile «Keine Drittanbieter-Tracker»). Produktiv vorgesehen: ein eigenes, medizinisch abgenommenes Video, lokal ausgeliefert, mit Untertitelspur. |
 
 ## 3. Umgebungsvariablen
 

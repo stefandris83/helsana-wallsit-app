@@ -45,6 +45,13 @@ jobs:
           # Feature-Flag «Pause ueberspringen» (B.13.5). Freigegeben durch den
           # Auftraggeber am 11.08.2026; siehe README, Abschnitt «Vorentscheide».
           VITE_FEATURE_SKIP_REST: 'true'
+          # Anleitungsvideo (§17, B.13.4). Externe Quelle bei Physitrack, fuer die
+          # Live-Version freigegeben durch den Auftraggeber am 12.08.2026. Der
+          # Abruf erfolgt aus dem Browser der Testperson heraus; siehe README und
+          # docs/schnittstellen.md. Ueber Repository-Variablen ueberschreibbar.
+          VITE_INSTRUCTION_VIDEO_URL: ${{ vars.INSTRUCTION_VIDEO_URL || 'https://media.physitrack.com/exercises/78c2dfb7-ca1e-4bb4-9c83-aeb2881edb5a/en/video_1280x720.mp4' }}
+          # Untertitelspur liegt fuer dieses Demo-Video nicht vor.
+          VITE_INSTRUCTION_VIDEO_TRACK_URL: ${{ vars.INSTRUCTION_VIDEO_TRACK_URL }}
           VITE_MIN_GROUP_SIZE: '5'
           # Ablageordner fuer freiwillig geteilte Ergebnisberichte.
           # Diese beiden Werte sind bewusst keine Secrets: der Schluessel darf
