@@ -623,8 +623,10 @@ Die visuelle Umsetzung folgt `design-system.md`.
   (`brand-400` nach `brand-600` aus `tokens.css`) und einem weissen Herz. Erzeugt von
   `scripts/generate-app-icons.mjs` (`npm run icons`) ausschliesslich mit Node-Bordmitteln, ohne
   zusaetzliche Abhaengigkeit; die Dateien sind eingecheckt und laufen nicht im Build mit.
-  **Herz und Wortmarke sind nicht mit dem Helsana-Markenauftritt abgeglichen — vor dem Pilot
-  durch ein offizielles App-Icon ersetzen.**
+  *Freigegeben durch den Auftraggeber am 12.08.2026* — zusammen mit dem Namen auf dem
+  Startbildschirm («Helsana Wandsitz-Pilot», kurz «Wandsitz»). Das Motiv ist weiterhin **nicht
+  mit dem Helsana-Markenauftritt abgeglichen**; vor dem Kundenpilot ist ein offizielles
+  App-Icon vorzuziehen.
 - **Illustrationen der Anleitung**: schlichte SVGs aus Semantic Tokens und als Platzhalter
   gekennzeichnet.
 - **Anleitungsvideo**: Im Code bleibt der Standard der gekennzeichnete Platzhalter
@@ -632,8 +634,8 @@ Die visuelle Umsetzung folgt `design-system.md`.
   *Freigegeben durch den Auftraggeber am 12.08.2026:* Der Deploy-Workflow setzt die Quelle, das
   Video ist damit auch in der Live-Version sichtbar. Der Abruf erfolgt aus dem Browser der
   Testperson direkt bei Physitrack (Auslieferung ueber AWS CloudFront); dabei werden IP-Adresse
-  und User-Agent an den Drittanbieter uebermittelt. **Das ist im Datenschutzhinweis noch nicht
-  abgebildet und vor dem Kundenpilot zu ergaenzen** (siehe `docs/schnittstellen.md`).
+  und User-Agent an den Drittanbieter uebermittelt. Die Datenschutzerklaerung in der App
+  (`legal.privacyPolicy.text`) benennt diesen Abruf seit dem 12.08.2026 ausdruecklich.
   Urspruenglich hatte der Auftraggeber am 02.08.2026 die Verwendung desselben externen
   Physitrack-Uebungsvideos fuer eine erste lokale Demo freigegeben
   (`https://media.physitrack.com/exercises/78c2dfb7-ca1e-4bb4-9c83-aeb2881edb5a/en/video_1280x720.mp4`).

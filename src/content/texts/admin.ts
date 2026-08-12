@@ -97,7 +97,7 @@ export const adminContent = defineContent({
   'admin.metric.bpEntries': { owner: 'product', text: 'Dokumentierte Blutdruckeinträge' },
 
   'admin.q.activityLevel': { owner: 'product', text: 'Aktivitätsniveau' },
-  'admin.q.wallsitExperience': { owner: 'product', text: 'Wallsit-Erfahrung' },
+  'admin.q.wallsitExperience': { owner: 'product', text: 'Wandsitz-Erfahrung' },
   'admin.q.barriers': { owner: 'product', text: 'Häufigste Barrieren' },
   'admin.q.support': { owner: 'product', text: 'Bevorzugte Unterstützung' },
   'admin.q.trainingDays': { owner: 'product', text: 'Bevorzugte Trainingstage' },
