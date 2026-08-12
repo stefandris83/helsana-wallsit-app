@@ -11,6 +11,13 @@ beforeEach(() => {
   setStorageAdapter(new MemoryStorageAdapter());
 });
 
+/**
+ * jsdom kennt kein Scrollen und meldet bei `window.scrollTo` «Not implemented».
+ * Die App springt bei jedem Seiten- und Schrittwechsel an den Anfang
+ * (`src/app/scroll.ts`); der Stub haelt die Testausgabe davon frei.
+ */
+window.scrollTo = () => {};
+
 afterEach(() => {
   cleanup();
 });

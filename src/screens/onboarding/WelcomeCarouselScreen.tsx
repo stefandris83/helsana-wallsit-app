@@ -5,6 +5,7 @@ import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { t } from '../../content/registry';
 import type { ContentId } from '../../content/registry';
+import { useScrollToTopOnChange } from '../../app/scroll';
 import { useAppStore } from '../../data/store';
 import { OnboardingShell } from './OnboardingShell';
 import type { WelcomeVisualKind } from './WelcomeVisual';
@@ -85,6 +86,9 @@ export function WelcomeCarouselScreen() {
   const safeIndex = clampWelcomeIndex(index);
   const card = welcomeCards[safeIndex];
   const isLast = safeIndex === welcomeCards.length - 1;
+
+  // Jede Karte beginnt oben, nicht auf der Scrollposition der vorigen.
+  useScrollToTopOnChange(safeIndex);
 
   const finish = () => {
     completeWelcome();

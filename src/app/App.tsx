@@ -1,10 +1,11 @@
 import { useEffect, type ReactNode } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import type { OnboardingStage } from '../domain/access';
 import { startAutoSync } from '../data/auto-sync';
 import { selectOnboardingStage } from '../data/selectors';
 import { useAppStore } from '../data/store';
 import { AppLayout } from './AppLayout';
+import { useScrollToTopOnChange } from './scroll';
 import { ThemeProvider } from './ThemeProvider';
 import { AccessScreen } from '../screens/onboarding/AccessScreen';
 import { ConsentScreen } from '../screens/onboarding/ConsentScreen';
@@ -78,6 +79,17 @@ function StartRedirect() {
   return <Navigate to={stageRoutes[stage]} replace />;
 }
 
+/**
+ * Setzt die Scrollposition bei jedem Seitenwechsel zurueck. React Router macht
+ * das nicht von sich aus; ohne diese Komponente startet die neue Seite dort,
+ * wo die vorige verlassen wurde.
+ */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useScrollToTopOnChange(pathname);
+  return null;
+}
+
 export function App() {
   // Automatische Uebermittlung an die Berichtsablage (freigegeben 06.08.2026).
   useEffect(() => startAutoSync(), []);
@@ -85,6 +97,7 @@ export function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <ThemeProvider>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<StartRedirect />} />
           <Route path="/zugang" element={<AccessScreen />} />

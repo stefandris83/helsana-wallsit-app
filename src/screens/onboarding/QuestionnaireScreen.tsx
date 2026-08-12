@@ -32,6 +32,7 @@ import type {
   Weekday,
 } from '../../domain/types';
 import { weekdayOrder } from '../../domain/types';
+import { useScrollToTopOnChange } from '../../app/scroll';
 import { useAppStore } from '../../data/store';
 import { OnboardingShell } from './OnboardingShell';
 
@@ -149,6 +150,9 @@ export function QuestionnaireScreen() {
   const isSafetyStep = step === totalSteps + 1;
   const currentStep = steps[Math.min(step, totalSteps) - 1];
   const activeStep: StepId | null = isSafetyStep ? null : currentStep.id;
+
+  // Jeder Schritt beginnt oben, nicht auf der Scrollposition des vorigen.
+  useScrollToTopOnChange(step);
 
   const update = (patch: Partial<Draft>) => setDraft((current) => ({ ...current, ...patch }));
 
