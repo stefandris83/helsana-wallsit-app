@@ -11,7 +11,8 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"docs/**/*.md\"",
     "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false --noEmit",
     "test": "vitest run",
-    "content:approve": "vite-node scripts/approve-content.ts"
+    "content:approve": "vite-node scripts/approve-content.ts",
+    "icons": "node scripts/generate-app-icons.mjs"
   },
   "dependencies": {
     "react": "^19.1.0",

@@ -435,6 +435,19 @@
   }
 }
 
+/* ---------- Kopfzeile ---------- */
+/*
+ * Bei Installation auf dem Startbildschirm liegt der rote Statusleisten-
+ * Streifen (`body::before` in `index.css`) am oberen Rand. Die Kopfzeile bleibt
+ * beim Scrollen darunter stehen statt darunter zu verschwinden. Ohne
+ * Installation ist der Versatz 0.
+ */
+.u-app-header {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 10;
+}
+
 /* ---------- Bottom-Navigation (abgeleitet aus .Menu Item 12.20, Mobile) ---------- */
 .u-bottom-nav {
   position: sticky;

@@ -12,6 +12,24 @@ import react from '@vitejs/plugin-react';
 const basePath = process.env.BASE_PATH ?? '/';
 
 /**
+ * Ersetzt `%APP_BASE%` in der `index.html` durch den Basis-Pfad.
+ *
+ * Manifest und Icons brauchen absolute Pfade: Beim Reload einer Unterseite
+ * (z. B. `/helsana-wallsit-app/heute`) liefert GitHub Pages die `404.html` aus.
+ * Ein relativer Verweis wuerde dann gegen `/heute/` aufgeloest und ins Leere
+ * zeigen. Innerhalb des Manifests bleiben die Pfade relativ — sie werden gegen
+ * die Manifest-Adresse aufgeloest und sind damit ohnehin unabhaengig vom Basis-Pfad.
+ */
+function appBasePlaceholder(): Plugin {
+  return {
+    name: 'app-base-placeholder',
+    transformIndexHtml(html) {
+      return html.replaceAll('%APP_BASE%', basePath);
+    },
+  };
+}
+
+/**
  * GitHub Pages liefert fuer unbekannte Pfade `404.html` aus. Da die App eine
  * Single-Page-Anwendung mit echten Pfaden ist (z. B. `/heute`), wird die
  * `index.html` als `404.html` dupliziert: ein Direktaufruf oder Reload einer
@@ -33,7 +51,7 @@ function githubPagesFallback(): Plugin {
 
 export default defineConfig({
   base: basePath,
-  plugins: [react(), githubPagesFallback()],
+  plugins: [react(), appBasePlaceholder(), githubPagesFallback()],
   resolve: {
     alias: {
       '@': new URL('./src', import.meta.url).pathname,

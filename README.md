@@ -83,6 +83,30 @@ Pfade nicht als Dateien, deshalb erzeugt der Build zusaetzlich eine `404.html` a
 `index.html`. Ein Direktaufruf oder ein Reload einer Unterseite laedt damit dieselbe Anwendung,
 die den Pfad selbst aufloest. `.nojekyll` verhindert die Jekyll-Verarbeitung.
 
+### Installation auf dem Startbildschirm
+
+`public/manifest.webmanifest` beschreibt die App als installierbar (`display: standalone`).
+Innerhalb des Manifests sind alle Pfade relativ, damit es lokal unter `/` und auf GitHub Pages
+unter `/<repository>/` gleichermassen funktioniert. Der Verweis in der `index.html` ist dagegen
+absolut: Beim Reload einer Unterseite liefert GitHub Pages die `404.html` aus, ein relativer
+Verweis wuerde dort ins Leere zeigen. Den Basis-Pfad setzt das Vite-Plugin `app-base-placeholder`
+ueber den Platzhalter `%APP_BASE%` ein.
+
+- **iOS (Safari):** Teilen → «Zum Home-Bildschirm». Die App startet danach ohne Browserleiste.
+- **Android (Chrome):** Menue → «App installieren» beziehungsweise «Zum Startbildschirm
+  hinzufuegen».
+- **Kein Service Worker** (CLAUDE.md B.13.2). Die Installation und der Start ohne Browserleiste
+  funktionieren ohne ihn; Chrome zeigt den automatischen Installationsbanner je nach Version aber
+  moeglicherweise nicht von sich aus, und ein Kaltstart ohne Netz laedt die App nicht. Beides
+  waere erst mit einem Service Worker zu loesen und ist bewusst nicht umgesetzt.
+
+**Farbe der Statusleiste.** `theme-color` faerbt die Browserleiste auf Android (Chrome) und iOS
+(Safari 15+) im Helsana-Rot, im dunklen Modus in `brand-400` — passend zu `--background-brand`.
+In der installierten App auf iOS zeichnet `apple-mobile-web-app-status-bar-style:
+black-translucent` die Seite unter die Statusleiste; der Streifen darunter wird von
+`body::before` (`src/index.css`) rot gefuellt, der Inhalt um `env(safe-area-inset-top)` nach
+unten geruecht. Ausserhalb der Installation ist dieser Wert 0 und das Layout unveraendert.
+
 **Grenzen dieser Auslieferung.** Sie ist fuer Demonstration und internes Testen gedacht, nicht
 fuer einen Pilot mit echten Teilnehmerdaten:
 
@@ -593,6 +617,14 @@ Die visuelle Umsetzung folgt `design-system.md`.
   ausgeschlossen. `src/components/Icon.tsx` enthaelt daher lokal vereinfacht nachgezeichnete
   Glyphen mit den Namen und Groessen aus Kapitel 9.1. **Vor dem Pilot durch die offiziellen
   Assets ersetzen**; die Komponentenschnittstelle bleibt unveraendert.
+- **App-Icons fuer den Startbildschirm**: `public/icon-192.png`, `public/icon-512.png`,
+  `public/icon-maskable-512.png`, `public/apple-touch-icon.png` und `public/favicon-32.png`.
+  Eigenentwurf ohne fremde Vorlage: vollflaechiges Helsana-Rot mit schwachem Verlauf
+  (`brand-400` nach `brand-600` aus `tokens.css`) und einem weissen Herz. Erzeugt von
+  `scripts/generate-app-icons.mjs` (`npm run icons`) ausschliesslich mit Node-Bordmitteln, ohne
+  zusaetzliche Abhaengigkeit; die Dateien sind eingecheckt und laufen nicht im Build mit.
+  **Herz und Wortmarke sind nicht mit dem Helsana-Markenauftritt abgeglichen — vor dem Pilot
+  durch ein offizielles App-Icon ersetzen.**
 - **Illustrationen der Anleitung**: schlichte SVGs aus Semantic Tokens und als Platzhalter
   gekennzeichnet.
 - **Anleitungsvideo**: Der produktive Standard bleibt der gekennzeichnete Platzhalter

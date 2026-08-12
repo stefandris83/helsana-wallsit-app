@@ -8,6 +8,30 @@
       name="description"
       content="Helsana Wallsit-Pilot: zwoelfwoechiges Bewegungsprogramm fuer ausgewaehlte Testpersonen."
     />
+
+    <!--
+      Faerbt die Browserleiste auf Android (Chrome) und iOS (Safari 15+) im
+      Helsana-Rot. Die Werte entsprechen `--background-brand` aus
+      `src/design/tokens.css`: brand-500 im hellen, brand-400 im dunklen Modus.
+      In einer HTML-Datei sind keine CSS-Variablen moeglich, deshalb hier fest.
+    -->
+    <meta name="theme-color" content="#9a0941" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#ad0b49" media="(prefers-color-scheme: dark)" />
+
+    <!-- Installation auf dem Startbildschirm (Android und iOS). -->
+    <link rel="manifest" href="%APP_BASE%manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Wandsitz" />
+    <!--
+      `black-translucent`: iOS zeichnet die Statusleiste dann transparent ueber
+      die Seite. Der Streifen darunter wird von `.u-safe-area-top` in
+      Helsana-Rot gefuellt; ausserhalb der Installation ist der Wert wirkungslos.
+    -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" href="%APP_BASE%apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="%APP_BASE%favicon-32.png" />
+
     <title>Helsana Wallsit-Pilot</title>
   </head>
   <body>

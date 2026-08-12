@@ -15,6 +15,30 @@
     background: var(--background-device);
     color: var(--text-primary);
     font: var(--body-m);
+    /*
+     * Ist die App auf dem Startbildschirm installiert, zeichnet iOS die Seite
+     * wegen `apple-mobile-web-app-status-bar-style: black-translucent` unter
+     * die Statusleiste. Der Abstand haelt den Inhalt darunter frei; im Browser
+     * meldet `safe-area-inset-top` den Wert 0 und das Layout bleibt gleich.
+     */
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  /*
+   * Faerbt den Bereich hinter der Statusleiste in Helsana-Rot (weisse Schrift
+   * durch `black-translucent`). Global statt im Layout, weil Zugang und
+   * Onboarding ausserhalb von `AppLayout` liegen. Ohne Installation ist die
+   * Hoehe 0 und der Streifen damit unsichtbar.
+   */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top, 0px);
+    background: var(--background-brand);
+    z-index: 30;
   }
 
   /*

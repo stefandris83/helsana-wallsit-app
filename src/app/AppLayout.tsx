@@ -40,7 +40,7 @@ export function AppLayout() {
         {t('nav.skipToContent')}
       </a>
 
-      <header className="u-border-bottom sticky top-none z-10 bg-background-card">
+      <header className="u-app-header u-border-bottom bg-background-card">
         <div className="container flex items-center justify-between gap-snail py-snail">
           <div className="flex items-center gap-snail">
             <HelsanaLogo />
